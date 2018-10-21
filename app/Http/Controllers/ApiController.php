@@ -98,7 +98,7 @@ class ApiController extends Controller
         
         $client->messages->create(
             // the number you'd like to send the message to
-            '+16476547615',
+            $number,
             array(
                 // A Twilio phone number you purchased at twilio.com/console
                 'from' => getenv('TWILIO_FROM'),
