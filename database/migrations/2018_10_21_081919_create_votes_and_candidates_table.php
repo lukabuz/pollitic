@@ -34,7 +34,7 @@ class CreateVotesAndCandidatesTable extends Migration
             $table->string('number');
 
             //Hashed PIN Number
-            $table->integer('pin');
+            $table->string('pin');
 
             //Status of vote
             //'unverified' : has not verified phone # yet
