@@ -21,8 +21,6 @@ Example response:
                 "websiteLink": "",
                 "socialMediaLink": "",
                 "imageLink": "",
-                "created_at": "",
-                "updated_at": "",
                 "voteCount": 1
             }
         ]
