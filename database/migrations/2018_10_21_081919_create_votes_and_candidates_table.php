@@ -52,7 +52,8 @@ class CreateVotesAndCandidatesTable extends Migration
                 ->on('candidates')
                 ->onDelete('cascade');
 
-            $table->timestamps();
+            //timestamps could be used for identification so they are removed
+            // $table->timestamps();
         });
     }
 
