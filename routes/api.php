@@ -16,3 +16,5 @@ use Illuminate\Http\Request;
 Route::get('/', 'ApiController@index');
 
 Route::post('/vote', 'ApiController@vote');
+
+Route::post('/vote/{id}/verify', 'ApiController@verify');
