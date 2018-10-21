@@ -34,6 +34,7 @@ Example response:
 
 
 **Variables you need to submit:**
+
 | Name | Required | Details |
 |--|--|--|
 | number | yes| Phone number of voter. 9 digit number(599123456) without any whitespace or dashes. |
