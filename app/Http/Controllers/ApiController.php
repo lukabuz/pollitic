@@ -68,8 +68,11 @@ class ApiController extends Controller
         $vote->candidate_id = $candidateId;
         $vote->status = 'unverified';
 
-        $this->sendMessage($number, 'გამარჯობა! თქვენი Pollitic-ის ვერიფიკაციის კოდი არის: ' . $pin);
-        
+        $res = $this->sendMessage($number, 'გამარჯობა! თქვენი Pollitic-ის ვერიფიკაციის კოდი არის: ' . $pin);
+        if(!$res){
+            return $this->returnError('მესიჯის გაგზავნისას დაფიქსირდა შეცდომა.');
+        }
+
         $vote->save();
 
         return response()->json([
@@ -109,6 +112,8 @@ class ApiController extends Controller
         $client = new GuzzleHttp\Client(['base_uri' => 'https://cheapsms.slockz.com/']);
 
         $response = $client->request('GET', 'rest?act=sms&to=' . $number . '&msg=' . $message . '&token=' . env('SMS_TOKEN'));
+
+        return $response->getStatusCode() == 200;
     }
 
     public function verifyCaptcha($request){
