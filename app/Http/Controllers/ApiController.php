@@ -132,7 +132,7 @@ class ApiController extends Controller
         $response = $client->post(
             'https://smsgateway.me/api/v4/message/send',
             [
-                'body' => 
+                'form_params' => 
                 [
                     'phone_number'=> $number,
                     'message'=> $message,
