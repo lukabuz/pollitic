@@ -160,13 +160,13 @@ class ApiController extends Controller
         $body = json_decode((string)$response->getBody());
         
         if($body->success){
-            return response()->json([
-                'status' => 'success',
-            ]);
+            $status = 'success';
         } else {
-            return response()->json([
-                'status' => 'error',
-            ]);
+            $status = 'error';
         }
+
+        return response()->json([
+            'status' => $status,
+        ]);
     }
 }
