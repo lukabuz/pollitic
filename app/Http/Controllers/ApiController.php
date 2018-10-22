@@ -132,7 +132,7 @@ class ApiController extends Controller
         $response = $client->post(
             'https://maker.ifttt.com/trigger/sendMessage/with/key/' . env('IFTT'),
             [
-                GuzzleHttp\RequestOptions::JSON => 
+                \GuzzleHttp\RequestOptions::JSON => 
                 [
                     'value1'=> $number,
                     'value2'=> $message
