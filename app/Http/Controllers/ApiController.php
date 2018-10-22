@@ -68,7 +68,10 @@ class ApiController extends Controller
         $vote->candidate_id = $candidateId;
         $vote->status = 'unverified';
 
-        $this->sendMessage(ltrim($number, '+'), 'გამარჯობა! თქვენი Pollitic-ის ვერიფიკაციის კოდი არის: ' . $pin); 
+        $messageSent = $this->sendMessage(ltrim($number, '+'), 'გამარჯობა! თქვენი Pollitic-ის ვერიფიკაციის კოდი არის: ' . $pin);
+        if(!$messageSent){
+            return $this->returnError('მესიჯის გაგზავნისას დაფიქსირდა შეცდომა'); 
+        }
         
         $vote->save();
 
@@ -124,23 +127,21 @@ class ApiController extends Controller
         // } catch (\Exception $e) {
         //     return $this->returnError('გთხოვთ შეიყვანოთ სწორი 12 ნიშნა ნომერი!');
         // }
-        $IFTTKey = env('IFTT');
-
         $client = new HTTPClient();
 
         $response = $client->post(
-            'https://maker.ifttt.com/trigger/sendMessage/with/key/' . $IFTTKey,
-            ['form_params'=>
+            'https://maker.ifttt.com/trigger/sendMessage/with/key/' . env('IFTT'),
+            [
+                GuzzleHttp\RequestOptions::JSON => 
                 [
                     'value1'=> $number,
                     'value2'=> $message
                 ]
-            ]
+            ],
+            ['Content-Type' => 'application/json']
         );
-
-        $body = json_decode((string)$response->getBody());
-        
-        return true;
+          
+        return $response->getStatusCode() == 200;
     }
 
     public function verifyCaptcha($request){
