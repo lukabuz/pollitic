@@ -31,8 +31,12 @@ class ApiController extends Controller
         $candidateId = $request->input('candidateId');
         Candidate::findOrFail($candidateId);
 
+        if(!Request::exists('candidateId')){
+            return $this->returnError('!');
+        }
+
         //check if phone # is valid
-        $toMatch = '#^\+[1-9]{1}[0-9]{3,14}$#';
+        $toMatch = '#^[+][1-9]{1}[0-9]{3,14}#';
         if(!preg_match($toMatch , $number)) {
             return $this->returnError('გთხოვთ შეიყვანოთ სწორი 12 ნიშნა ნომერი!');
         }
@@ -84,7 +88,9 @@ class ApiController extends Controller
                     'message' => 'ვერიფიკაციამ წარმატებით ჩაიარა! თქვენი ხმა მიღებულია.',
                 ]
             ]);
-        } else { $this->returnError('შეყვანილი ვერიფიკაციის კოდი არასწორია!'); }
+        } else { 
+            $this->returnError('შეყვანილი ვერიფიკაციის კოდი არასწორია!'); 
+        }
     }
 
     public function returnError($message){
