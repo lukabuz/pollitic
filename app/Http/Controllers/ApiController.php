@@ -68,7 +68,7 @@ class ApiController extends Controller
         $vote->candidate_id = $candidateId;
         $vote->status = 'unverified';
 
-        $this->sendMessage($number, 'გამარჯობა! თქვენი Pollitic-ის ვერიფიკაციის კოდი არის: ' . $pin); 
+        $this->sendMessage(ltrim($number, '+'), 'გამარჯობა! თქვენი Pollitic-ის ვერიფიკაციის კოდი არის: ' . $pin); 
         
         $vote->save();
 
@@ -106,24 +106,41 @@ class ApiController extends Controller
     }
 
     public function sendMessage($number, $message){
-        try {
-            $client = new Client(getenv('TWILIO_SID'), getenv('TWILIO_TOKEN'));
+        // try {
+        //     $client = new Client(getenv('TWILIO_SID'), getenv('TWILIO_TOKEN'));
         
-            $client->messages->create(
-                // the number you'd like to send the message to
-                $number,
-                array(
-                    // A Twilio phone number you purchased at twilio.com/console
-                    'from' => getenv('TWILIO_FROM'),
-                    // the body of the text message you'd like to send
-                    'body' => $message
-                )
-            );
+        //     $client->messages->create(
+        //         // the number you'd like to send the message to
+        //         $number,
+        //         array(
+        //             // A Twilio phone number you purchased at twilio.com/console
+        //             'from' => getenv('TWILIO_FROM'),
+        //             // the body of the text message you'd like to send
+        //             'body' => $message
+        //         )
+        //     );
 
-            return 0;
-        } catch (\Exception $e) {
-            return $this->returnError('გთხოვთ შეიყვანოთ სწორი 12 ნიშნა ნომერი!');
-        }
+        //     return 0;
+        // } catch (\Exception $e) {
+        //     return $this->returnError('გთხოვთ შეიყვანოთ სწორი 12 ნიშნა ნომერი!');
+        // }
+        $IFTTKey = env('IFTT');
+
+        $client = new HTTPClient();
+
+        $response = $client->post(
+            'https://maker.ifttt.com/trigger/sendMessage/with/key/' . $IFTTKey,
+            ['form_params'=>
+                [
+                    'value1'=> $number,
+                    'value2'=> $message
+                ]
+            ]
+        );
+
+        $body = json_decode((string)$response->getBody());
+
+        return $body->success || $this->returnError('მესიჯის გაგზავნისას დაფიქსირდა შეცდომა.');
     }
 
     public function verifyCaptcha($request){
