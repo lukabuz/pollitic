@@ -32,7 +32,7 @@ class ApiController extends Controller
         Candidate::findOrFail($candidateId);
 
         //check if phone # is valid
-        if(!preg_match("/^(\+)([1-9]{1,3})(\d{10})$/g" , $number)) {
+        if(!preg_match("^\+[1-9]{1}[0-9]{3,14}$" , $number)) {
             return $this->returnError('გთხოვთ შეიყვანოთ სწორი 12 ნიშნა ნომერი!');
         }
 
