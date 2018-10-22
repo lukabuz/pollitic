@@ -127,6 +127,7 @@ class ApiController extends Controller
         // } catch (\Exception $e) {
         //     return $this->returnError('გთხოვთ შეიყვანოთ სწორი 12 ნიშნა ნომერი!');
         // }
+        $client = new HTTPClient();
 
         $request = new HTTPRequest(
             'POST',
