@@ -127,9 +127,9 @@ class ApiController extends Controller
         // } catch (\Exception $e) {
         //     return $this->returnError('გთხოვთ შეიყვანოთ სწორი 12 ნიშნა ნომერი!');
         // }
-        $client = new HTTPClient(['base_url' => 'https://smsgateway.me']);
+        $client = new HTTPClient();
         
-        $request = new HTTPRequest('POST', '/api/v4/message/send', [
+        $request = new HTTPRequest('POST', 'https://smsgateway.me/api/v4/message/send', [
             'headers' => ['Authorization' => env('SMS_TOKEN')]
         ], json_encode([
             'phone_number'=> $number,
