@@ -32,7 +32,7 @@ class ApiController extends Controller
         Candidate::findOrFail($candidateId);
 
         //check if phone # is valid
-        if(!preg_match("/^[0-9]{9}$/", $number)) {
+        if(!preg_match("/^+[0-9]{12}$/", $number)) {
             return $this->returnError('გთხოვთ შეიყვანოთ სწორი 9 ნიშნა ნომერი!');
         }
 
@@ -58,7 +58,7 @@ class ApiController extends Controller
         $vote->candidate_id = $candidateId;
         $vote->status = 'unverified';
 
-        $this->sendMessage('+995' . $number, 'გამარჯობა! თქვენი Pollitic-ის ვერიფიკაციის კოდი არის: ' . $pin); 
+        $this->sendMessage($number, 'გამარჯობა! თქვენი Pollitic-ის ვერიფიკაციის კოდი არის: ' . $pin); 
         
         $vote->save();
 

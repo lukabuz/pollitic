@@ -35,7 +35,7 @@ Example response:
 
 | Name | Required | Details |
 |--|--|--|
-| number | yes| Phone number of voter. 9 digit number(599123456) without any whitespace or dashes. |
+| number | yes| Phone number of voter. a '+' plus 12 digit number(+995599123456) without any whitespace or dashes. |
 | candidateId | yes| ID of the candidate the person voted for. The candidateId for each candidate is provided in the response of the '/api' route as the 'id' attribute. |
 | gender | no| Any string, the backend just treats it as a string and puts it in the database. The backend chose to treat this as just a string instead of a binary value because it is the frontend's job to conform to traditional gender roles. |
 | age | no| Any positive integer.  |
