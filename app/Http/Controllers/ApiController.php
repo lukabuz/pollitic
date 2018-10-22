@@ -95,19 +95,23 @@ class ApiController extends Controller
     }
 
     public function sendMessage($number, $message){
-        $client = new Client(getenv('TWILIO_SID'), getenv('TWILIO_TOKEN'));
+        try {
+            $client = new Client(getenv('TWILIO_SID'), getenv('TWILIO_TOKEN'));
         
-        $client->messages->create(
-            // the number you'd like to send the message to
-            $number,
-            array(
-                // A Twilio phone number you purchased at twilio.com/console
-                'from' => getenv('TWILIO_FROM'),
-                // the body of the text message you'd like to send
-                'body' => $message
-            )
-        );
+            $client->messages->create(
+                // the number you'd like to send the message to
+                $number,
+                array(
+                    // A Twilio phone number you purchased at twilio.com/console
+                    'from' => getenv('TWILIO_FROM'),
+                    // the body of the text message you'd like to send
+                    'body' => $message
+                )
+            );
 
-        return 0;
+            return 0;
+        } catch (\Exception $e) {
+            return $this->returnError('გთხოვთ შეიყვანოთ სწორი 12 ნიშნა ნომერი!');
+        }
     }
 }
