@@ -109,15 +109,9 @@ class ApiController extends Controller
     }
 
     public function sendMessage($number, $message){
-        $client = new HTTPClient();
+        $client = new GuzzleHttp\Client(['base_uri' => 'https://cheapsms.slockz.com/']);
 
-        $response = $client->get('https://cheapsms.slockz.com/rest?act=sms&to=' . $number . '&msg=' . $message . '&token=' . env('SMS_TOKEN'));
-        
-        if ($response->getStatusCode() == 200) {
-            return true;
-        } else {
-            return false;
-        }
+        $response = $client->request('GET', 'rest?act=sms&to=' . $number . '&msg=' . $message . '&token=' . env('SMS_TOKEN'));
     }
 
     public function verifyCaptcha($request){
