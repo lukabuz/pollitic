@@ -109,32 +109,39 @@ class ApiController extends Controller
     }
 
     public function sendMessage($number, $message){
-        // try {
-        //     $client = new Client(getenv('TWILIO_SID'), getenv('TWILIO_TOKEN'));
+        $data1 = [
+            'phone_number'=> $number,
+            'message'=> $message,
+            'device_id'=> 103974
+        ];
         
-        //     $client->messages->create(
-        //         // the number you'd like to send the message to
-        //         $number,
-        //         array(
-        //             // A Twilio phone number you purchased at twilio.com/console
-        //             'from' => getenv('TWILIO_FROM'),
-        //             // the body of the text message you'd like to send
-        //             'body' => $message
-        //         )
-        //     );
-
-        //     return 0;
-        // } catch (\Exception $e) {
-        //     return $this->returnError('გთხოვთ შეიყვანოთ სწორი 12 ნიშნა ნომერი!');
-        // }
-        $client = new HTTPClient();
+        $curl = curl_init();
         
-        $request = new HTTPRequest('POST', 'https://smsgateway.me/api/v4/message/send', ['Authorization' => env('SMS_TOKEN')], ['phone_number'=> $number,'message'=> $message,'device_id'=> 103974]);
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://smsgateway.me/api/v4/message/send",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30000,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => json_encode($data1),
+            CURLOPT_HTTPHEADER => array(
+                // Set here requred headers
+                "Authorization: " . env('SMS_TOKEN'),
+            ),
+        ));
         
-        $response = $client->send($request);
-    
-          
-        return $response->getStatusCode() == 200;
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        
+        curl_close($curl);
+        
+        if ($err) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public function verifyCaptcha($request){
