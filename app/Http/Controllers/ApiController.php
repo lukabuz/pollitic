@@ -49,7 +49,7 @@ class ApiController extends Controller
         //check if the number has been used before(compare hash to database hashes)
         foreach(Vote::where('status', 'verified')->get() as $vote){
             if(Hash::check($number, $vote->number)){
-                return $this->returnError('ეს ნომერი ერთხელ უკვე გამოყენებული იქნა!');
+                return $this->returnError('ეს ნომერი ერთხელ უკვე გამოყენებულია!');
             };
         }
 
