@@ -31,7 +31,7 @@ class ApiController extends Controller
         $number = $request->input('number');
     
         if(!$this->verifyCaptcha($request)){
-            return $this->returnError('გთხოვთ დაამტკიცოთ, რომ არ ხართ რობოტი');
+            // return $this->returnError('გთხოვთ დაამტკიცოთ, რომ არ ხართ რობოტი');
         }
 
         if(!$request->exists('candidateId') || $request->input('candidateId') == ''){
