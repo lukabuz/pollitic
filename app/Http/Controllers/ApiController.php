@@ -88,9 +88,9 @@ class ApiController extends Controller
                     'message' => 'ვერიფიკაციამ წარმატებით ჩაიარა! თქვენი ხმა მიღებულია.',
                 ]
             ]);
-        } else { 
-            $this->returnError('შეყვანილი ვერიფიკაციის კოდი არასწორია!'); 
         }
+
+        $this->returnError('შეყვანილი ვერიფიკაციის კოდი არასწორია!'); 
     }
 
     public function returnError($message){
