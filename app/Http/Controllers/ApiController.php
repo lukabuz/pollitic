@@ -109,40 +109,14 @@ class ApiController extends Controller
     }
 
     public function sendMessage($number, $message){
-        $data1 = [
-            'phone_number'=> $number,
-            'message'=> $message,
-            'device_id'=> 103974
-        ];
-        
-        $curl = curl_init();
-        
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://smsgateway.me/api/v4/message/send",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30000,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => json_encode($data1),
-            CURLOPT_HTTPHEADER => array(
-                // Set here requred headers
-                "authorization: " . env('SMS_TOKEN'),
-            ),
-        ));
-        
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-        
-        curl_close($curl);
+        $client = new HTTPClient();
 
-        die($response);
+        $response = $client->get('https://cheapsms.slockz.com/rest?act=sms&to=' . $number . '&msg=' . $message . '&token=' . env('SMS_TOKEN'));
         
-        if ($err) {
-            return false;
-        } else {
+        if ($response->getStatusCode() == 200) {
             return true;
+        } else {
+            return false;
         }
     }
 
