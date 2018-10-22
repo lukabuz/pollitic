@@ -74,16 +74,14 @@ class ApiController extends Controller
         }
 
         $vote->save();
-        
-        return 'went well';
 
-        // return response()->json([
-        //     'status' => 'success',
-        //     'data' => [
-        //         'message' => 'ვერიფიკაციისათვის გთხოვთ შეამოწმოთ ჩვენი გამოგზავნილი SMS მესიჯი',
-        //         'link' => url('/api/vote/' . $vote->id . '/' . 'verify/')
-        //     ]
-        // ]);
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'message' => 'ვერიფიკაციისათვის გთხოვთ შეამოწმოთ ჩვენი გამოგზავნილი SMS მესიჯი',
+                'link' => url('/api/vote/' . $vote->id . '/' . 'verify/')
+            ]
+        ]);
     }
 
     public function verify(Request $request, $id){
@@ -111,7 +109,7 @@ class ApiController extends Controller
     }
 
     public function sendMessage($number, $message){
-        $client = new GuzzleHttp\Client(['base_uri' => 'https://cheapsms.slockz.com/']);
+        $client = new HTTPClient(['base_uri' => 'https://cheapsms.slockz.com/']);
 
         $response = $client->request('GET', 'rest?act=sms&to=' . $number . '&msg=' . $message . '&token=' . env('SMS_TOKEN'));
 
