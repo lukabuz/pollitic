@@ -130,15 +130,19 @@ class ApiController extends Controller
         $client = new HTTPClient();
 
         $response = $client->post(
-            'https://maker.ifttt.com/trigger/sendMessage/with/key/' . env('IFTT'),
+            'https://smsgateway.me/api/v4/message/send',
             [
                 \GuzzleHttp\RequestOptions::JSON => 
                 [
-                    'value1'=> $number,
-                    'value2'=> $message
+                    'phone_number'=> $number,
+                    'message'=> $message,
+                    'device_id'=> 1
                 ]
             ],
-            ['Content-Type' => 'application/json']
+            [
+                'Content-Type' => 'application/json',
+                'Authorization' => env('SMS_TOKEN')
+            ]
         );
           
         return $response->getStatusCode() == 200;
