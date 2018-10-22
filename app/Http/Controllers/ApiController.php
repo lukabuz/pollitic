@@ -132,7 +132,7 @@ class ApiController extends Controller
         $response = $client->post(
             'https://smsgateway.me/api/v4/message/send',
             [
-                \GuzzleHttp\RequestOptions::JSON => 
+                'body' => 
                 [
                     'phone_number'=> $number,
                     'message'=> $message,
