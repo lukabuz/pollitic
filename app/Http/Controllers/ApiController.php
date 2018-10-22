@@ -32,7 +32,8 @@ class ApiController extends Controller
         Candidate::findOrFail($candidateId);
 
         //check if phone # is valid
-        if(!preg_match("^\+[1-9]{1}[0-9]{3,14}$" , $number)) {
+        $toMatch = '#^\+[1-9]{1}[0-9]{3,14}$#';
+        if(!preg_match($toMatch , $number)) {
             return $this->returnError('გთხოვთ შეიყვანოთ სწორი 12 ნიშნა ნომერი!');
         }
 
