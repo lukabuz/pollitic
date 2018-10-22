@@ -90,7 +90,7 @@ class ApiController extends Controller
             ]);
         }
 
-        $this->returnError('შეყვანილი ვერიფიკაციის კოდი არასწორია!'); 
+        return $this->returnError('შეყვანილი ვერიფიკაციის კოდი არასწორია!'); 
     }
 
     public function returnError($message){
