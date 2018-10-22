@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Candidate;
 use App\Vote;
 use Twilio\Rest\Client;
+use GuzzleHttp\Client as HTTPClient;
 
 class ApiController extends Controller
 {
@@ -30,6 +31,9 @@ class ApiController extends Controller
         $number = $request->input('number');
         $candidateId = $request->input('candidateId');
         Candidate::findOrFail($candidateId);
+    
+        $body = json_decode((string)$response->getBody());
+        return $body->success;
 
         if(!$request->exists('candidateId')){
             return $this->returnError('!');
@@ -46,6 +50,18 @@ class ApiController extends Controller
             if(Hash::check($number, $vote->number)){
                 return $this->returnError('ეს ნომერი ერთხელ უკვე გამოყენებული იქნა!');
             };
+        }
+
+        $count = 0;
+
+        foreach(Vote::all() as $vote){
+            if(Hash::check($number, $vote->number)){
+                $count++;
+            };
+
+            if($count > 5){
+                return $this->returnError('ამ ნომრისგან დაფიქსირდა საეჭვო მოქმედებები. გთხოვთ ცადოთ მოგვიანებით');
+            }
         }
 
         $vote = new Vote;
@@ -118,6 +134,39 @@ class ApiController extends Controller
             return 0;
         } catch (\Exception $e) {
             return $this->returnError('გთხოვთ შეიყვანოთ სწორი 12 ნიშნა ნომერი!');
+        }
+    }
+
+    public function verifyCaptcha(Request $request){
+        $client = new HTTPClient();
+
+        $ip = $request->header('x-forwarded-for');
+
+    	$ip = explode(",",$ip);
+
+        $ip = $ip[0];
+    
+        $response = $client->post(
+            'https://www.google.com/recaptcha/api/siteverify',
+            ['form_params'=>
+                [
+                    'secret'=> env('GOOGLE_RECAPTCHA_SECRET'),
+                    'response'=> $request->input('value'),
+                    'remoteip'=> $ip
+                ]
+            ]
+        );
+
+        $body = json_decode((string)$response->getBody());
+        
+        if($body->success){
+            return response()->json([
+                'status' => 'success',
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'error',
+            ]);
         }
     }
 }
