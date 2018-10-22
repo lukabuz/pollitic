@@ -129,13 +129,7 @@ class ApiController extends Controller
         // }
         $client = new HTTPClient();
         
-        $request = new HTTPRequest('POST', 'https://smsgateway.me/api/v4/message/send', [
-            'headers' => ['Authorization' => env('SMS_TOKEN')]
-        ], json_encode([
-            'phone_number'=> $number,
-            'message'=> $message,
-            'device_id'=> 1
-        ]));
+        $request = new HTTPRequest('POST', 'https://smsgateway.me/api/v4/message/send', ['Authorization' => env('SMS_TOKEN')], ['phone_number'=> $number,'message'=> $message,'device_id'=> 103974]);
         
         $response = $client->send($request);
     
