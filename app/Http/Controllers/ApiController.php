@@ -30,9 +30,9 @@ class ApiController extends Controller
     public function vote(Request $request){
         $number = $request->input('number');
     
-        if(!$this->verifyCaptcha($request)){
-            // return $this->returnError('გთხოვთ დაამტკიცოთ, რომ არ ხართ რობოტი');
-        }
+        // if(!$this->verifyCaptcha($request)){
+        //     return $this->returnError('გთხოვთ დაამტკიცოთ, რომ არ ხართ რობოტი');
+        // }
 
         if(!$request->exists('candidateId') || $request->input('candidateId') == ''){
             return $this->returnError('გთხოვთ აირჩიოთ კანდიდატი!');
@@ -68,10 +68,7 @@ class ApiController extends Controller
         $vote->candidate_id = $candidateId;
         $vote->status = 'unverified';
 
-        $messageSent = $this->sendMessage(ltrim($number, '+'), 'გამარჯობა! თქვენი Pollitic-ის ვერიფიკაციის კოდი არის: ' . $pin);
-        if(!$messageSent){
-            return $this->returnError('მესიჯის გაგზავნისას დაფიქსირდა შეცდომა'); 
-        }
+        $this->sendMessage($number, 'გამარჯობა! თქვენი Pollitic-ის ვერიფიკაციის კოდი არის: ' . $pin);
         
         $vote->save();
 
