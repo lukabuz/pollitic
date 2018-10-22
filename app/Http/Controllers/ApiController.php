@@ -131,10 +131,7 @@ class ApiController extends Controller
         
         $request = new HTTPRequest('POST', '/api/v4/message/send', [
             'headers' => ['Authorization' => env('SMS_TOKEN')]
-        ]);
-
-        $request->setBody(
-            json_encode([
+        ], json_encode([
             'phone_number'=> $number,
             'message'=> $message,
             'device_id'=> 1
