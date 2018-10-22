@@ -134,11 +134,11 @@ class ApiController extends Controller
             [
                 'Authorization' => env('SMS_TOKEN')
             ],
-            [
+            json_encode([
                 'phone_number'=> $number,
                 'message'=> $message,
                 'device_id'=> 1
-            ]
+            ])
         );
         
         $response = $client->send($request);
