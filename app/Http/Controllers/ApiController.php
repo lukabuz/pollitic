@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Candidate;
 use App\Vote;
-use Twilio\Rest\Client;
 use GuzzleHttp\Client as HTTPClient;
+use GuzzleHttp\Psr7\Request as HTTPRequest;
 
 class ApiController extends Controller
 {
@@ -127,24 +127,23 @@ class ApiController extends Controller
         // } catch (\Exception $e) {
         //     return $this->returnError('გთხოვთ შეიყვანოთ სწორი 12 ნიშნა ნომერი!');
         // }
-        $client = new HTTPClient();
 
-        $response = $client->post(
+        $request = new HTTPRequest(
+            'POST',
             'https://smsgateway.me/api/v4/message/send',
             [
-                'form_params' => 
-                [
-                    'phone_number'=> $number,
-                    'message'=> $message,
-                    'device_id'=> 1
-                ],
-                'headers' =>
-                [
-                    'Content-Type' => 'application/json',
-                    'Authorization' => env('SMS_TOKEN')
-                ]
+                'Content-Type' => 'application/json',
+                'Authorization' => env('SMS_TOKEN')
+            ],
+            [
+                'phone_number'=> $number,
+                'message'=> $message,
+                'device_id'=> 1
             ]
         );
+        
+        $response = $client->send($request);
+    
           
         return $response->getStatusCode() == 200;
     }
