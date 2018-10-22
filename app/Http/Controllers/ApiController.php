@@ -31,7 +31,7 @@ class ApiController extends Controller
         $candidateId = $request->input('candidateId');
         Candidate::findOrFail($candidateId);
 
-        if(!Request::exists('candidateId')){
+        if(!$request->exists('candidateId')){
             return $this->returnError('!');
         }
 
