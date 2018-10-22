@@ -137,11 +137,12 @@ class ApiController extends Controller
                     'phone_number'=> $number,
                     'message'=> $message,
                     'device_id'=> 1
+                ],
+                'headers' =>
+                [
+                    'Content-Type' => 'application/json',
+                    'Authorization' => env('SMS_TOKEN')
                 ]
-            ],
-            [
-                'Content-Type' => 'application/json',
-                'Authorization' => env('SMS_TOKEN')
             ]
         );
           
