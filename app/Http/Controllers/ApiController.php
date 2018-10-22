@@ -29,7 +29,6 @@ class ApiController extends Controller
 
     public function vote(Request $request){
         $number = $request->input('number');
-        $candidateId = $request->input('candidateId');
     
         if(!$this->verifyCaptcha($request)){
             return $this->returnError('გთხოვთ დაამტკიცოთ, რომ არ ხართ რობოტი');
@@ -39,10 +38,12 @@ class ApiController extends Controller
             return $this->returnError('გთხოვთ აირჩიოთ კანდიდატი!');
         }
 
+        $candidateId = $request->input('candidateId');
+
         //check if phone # is valid
         $toMatch = '#^[+][1-9]{1}[0-9]{3,14}#';
         if(!preg_match($toMatch , $number)) {
-            return $this->returnError('გთხოვთ შეიყვანოთ სწორი 12 ნიშნა ნომერი!');
+            return $this->returnError('გთხოვთ შეიყვანოთ სწორი ნომერი!');
         }
 
         //check if the number has been used before(compare hash to database hashes)
