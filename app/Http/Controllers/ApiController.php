@@ -69,6 +69,7 @@ class ApiController extends Controller
         $vote->status = 'unverified';
 
         $res = $this->sendMessage($number, 'გამარჯობა! თქვენი Pollitic-ის ვერიფიკაციის კოდი არის: ' . $pin);
+        die($res);
         if(!$res){
             return $this->returnError('მესიჯის გაგზავნისას დაფიქსირდა შეცდომა.');
         }
