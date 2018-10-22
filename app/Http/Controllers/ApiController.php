@@ -139,8 +139,10 @@ class ApiController extends Controller
         );
 
         $body = json_decode((string)$response->getBody());
-
-        return $body->success || $this->returnError('მესიჯის გაგზავნისას დაფიქსირდა შეცდომა.');
+        
+        if(!$body->success){
+            return $this->returnError('მესიჯის გაგზავნისას დაფიქსირდა შეცდომა.');
+        }
     }
 
     public function verifyCaptcha($request){
