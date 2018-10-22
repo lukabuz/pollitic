@@ -52,18 +52,6 @@ class ApiController extends Controller
             };
         }
 
-        $count = 0;
-
-        foreach(Vote::all() as $vote){
-            if(Hash::check($number, $vote->number)){
-                $count++;
-            };
-
-            if($count > 5){
-                return $this->returnError('ამ ნომრისგან დაფიქსირდა საეჭვო მოქმედებები. გთხოვთ ცადოთ მოგვიანებით');
-            }
-        }
-
         $vote = new Vote;
         //create pin and store it in memory for the time being.
         //this value is only kept within this function and 
