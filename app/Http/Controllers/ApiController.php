@@ -132,7 +132,6 @@ class ApiController extends Controller
             'POST',
             'https://smsgateway.me/api/v4/message/send',
             [
-                'Content-Type' => 'application/json',
                 'Authorization' => env('SMS_TOKEN')
             ],
             [
