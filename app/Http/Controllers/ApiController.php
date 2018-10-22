@@ -34,7 +34,7 @@ class ApiController extends Controller
             return $this->returnError('გთხოვთ დაამტკიცოთ, რომ არ ხართ რობოტი');
         }
 
-        if(!$request->exists('candidateId')){
+        if(!$request->exists('candidateId') || $request->input('candidateId') == ''){
             return $this->returnError('გთხოვთ აირჩიოთ კანდიდატი!');
         }
 
