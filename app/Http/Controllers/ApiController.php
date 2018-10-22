@@ -32,11 +32,12 @@ class ApiController extends Controller
         $candidateId = $request->input('candidateId');
         Candidate::findOrFail($candidateId);
     
-        $body = json_decode((string)$response->getBody());
-        return $body->success;
+        if(!$this->verifyCaptcha($request)){
+            return $this->returnError('გთხოვთ დაამტკიცოთ, რომ არ ხართ რობოტი');
+        }
 
         if(!$request->exists('candidateId')){
-            return $this->returnError('!');
+            return $this->returnError('გთხოვთ აირჩიოთ კანდიდატი!');
         }
 
         //check if phone # is valid
@@ -125,7 +126,7 @@ class ApiController extends Controller
         }
     }
 
-    public function verifyCaptcha(Request $request){
+    public function verifyCaptcha($request){
         $client = new HTTPClient();
 
         $ip = $request->header('x-forwarded-for');
@@ -147,14 +148,6 @@ class ApiController extends Controller
 
         $body = json_decode((string)$response->getBody());
         
-        if($body->success){
-            $status = 'success';
-        } else {
-            $status = 'error';
-        }
-
-        return response()->json([
-            'status' => $status,
-        ]);
+        return $body->success;
     }
 }

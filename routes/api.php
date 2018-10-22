@@ -18,5 +18,3 @@ Route::get('/', 'ApiController@index');
 Route::post('/vote', 'ApiController@vote');
 
 Route::post('/vote/{id}/verify', 'ApiController@verify');
-
-Route::post('/captcha', 'ApiController@verifyCaptcha');
