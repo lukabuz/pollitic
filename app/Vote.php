@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Vote extends Model
 {   
-    protected $timestamps = false;
+    public $timestamps = false;
     protected $hidden = array('pin', 'number', 'status');
 
     //
