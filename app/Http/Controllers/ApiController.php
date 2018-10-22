@@ -128,7 +128,7 @@ class ApiController extends Controller
             CURLOPT_POSTFIELDS => json_encode($data1),
             CURLOPT_HTTPHEADER => array(
                 // Set here requred headers
-                "Authorization: " . env('SMS_TOKEN'),
+                "authorization: " . env('SMS_TOKEN'),
             ),
         ));
         
@@ -136,6 +136,8 @@ class ApiController extends Controller
         $err = curl_error($curl);
         
         curl_close($curl);
+
+        die($response);
         
         if ($err) {
             return false;
