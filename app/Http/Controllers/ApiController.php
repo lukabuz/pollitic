@@ -128,7 +128,7 @@ class ApiController extends Controller
         //     return $this->returnError('გთხოვთ შეიყვანოთ სწორი 12 ნიშნა ნომერი!');
         // }
         $client = new HTTPClient();
-        $client->setDefaultOption('headers/Authorization', env('SMS_TOKEN'));
+        $client->setDefaultOption('headers', array('Authorization' => env('SMS_TOKEN')));
 
         $request = new HTTPRequest(
             'POST',
