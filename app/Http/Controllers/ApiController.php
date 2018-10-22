@@ -30,7 +30,6 @@ class ApiController extends Controller
     public function vote(Request $request){
         $number = $request->input('number');
         $candidateId = $request->input('candidateId');
-        Candidate::findOrFail($candidateId);
     
         if(!$this->verifyCaptcha($request)){
             return $this->returnError('გთხოვთ დაამტკიცოთ, რომ არ ხართ რობოტი');
