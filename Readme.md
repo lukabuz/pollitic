@@ -1,35 +1,106 @@
 
+
 # Pollitic
 
 Pollitic is a web application that allows people to vote for their preferred candidates using a secure mobile authenticated system that doesn't store any of the user's raw data.
 
-
 ## GET: '/api/'
+Returns a JSON Object with 'data', which contains a 'polls' attribute which is an array of all public polls.
 
-
-Returns a JSON Object with 'data' being an array of candidates
-
-Example response: 
+Example response:
 
     {
         "status": "success",
-        "data": [
-            {
-                "id": 1,
-                "name": "",
-                "number": "",
-                "websiteLink": "",
-                "socialMediaLink": "",
-                "imageLink": "",
-                "voteCount": 1
+        "data": {
+            "polls": [
+                {
+                    "id": 1,
+                    "name": "test",
+                    "description": "test",
+                    "imageLink": null,
+                    "password": null,
+                    "charts": "",
+                    "requirePhoneAuth": "True",
+                    "isListed": "True",
+                    "cookieValue": "m1mgTNzOqVQO4xaRJyvZASzTr",
+                    "created_at": "2018-10-23 10:42:59",
+                    "updated_at": "2018-10-23 10:42:59"
+                },
+            ]
+        }
+    }
+
+
+## POST: '/api/poll/create'
+
+Creates a poll based on the request.
+
+**Variables you need to submit:**
+
+| Name | Required | Details | Example |
+|--|--|--|--|
+| name | yes | name of the poll |  |
+| description | yes | description of poll |  |
+| password | no | if this value is provided, the poll will require all voters to enter this password |  |
+| charts | yes | this is a string value for the frontend so it can store how the user chose his poll results to be displayed(you can have this as a serialized array, stringified json, anything that is a string.) |  |
+| requirePhoneAuth | yes | string boolean value of if this poll requires phone authentication | 'True' |
+| isListed | yes | string boolean value of if this poll is unlisted or not | 'True' |
+| candidates | yes | an array of candidates | ['name1', 'name2'] |
+
+The response to this will __always__ have a 'status' property. The status will either be 'success' or 'error'
+
+***error***
+
+- If there is an error, there will always be an error attribute that contains the error message. These error messages can be displayed straight to the user.
+
+***success***
+
+ - If the status is success, then there will be a message attribute saying the poll is created, and a data attribute with a poll attribute containing the info for the poll that was created.
+
+## GET: '/api/poll/{id}'
+Returns a JSON Object with 'data' , which contains a 'poll' attribute with all the poll and candidate information. If the poll is not found, a 404 is returned.
+
+Example response: 
+
+     {
+        "status":"success",
+        "data":{
+            "poll":{
+                "id":1,
+                "name":"test",
+                "description":"test",
+                "imageLink":null,
+                "password":null,
+                "charts":"",
+                "requirePhoneAuth":"True",
+                "isListed":"True",
+                "cookieValue":"m1mgTNzOqVQO4xaRJyvZASzTr",
+                "created_at":"2018-10-23 10:42:59",
+                "updated_at":"2018-10-23 10:42:59",
+                "candidates":[
+                    {
+                        "id":1,
+                        "name":"name2",
+                        "number":null,
+                        "websiteLink":null,
+                        "socialMediaLink":null,
+                        "imageLink":null,
+                        "created_at":"2018-10-23 10:42:59",
+                        "updated_at":"2018-10-23 10:42:59",
+                        "poll_id":1,
+                        "voteCount":0
+                    }
+                ]
             }
-        ]
+        }
     }
 
 
 
-## POST: '/api/vote/'
 
+## POST: '/api/poll/{id}/vote/'
+
+The {id} is the unique ID of the poll currently being voted on.
 
 **Variables you need to submit:**
 
@@ -40,20 +111,33 @@ Example response:
 | gender | no| Any string, the backend just treats it as a string and puts it in the database. The backend chose to treat this as just a string instead of a binary value because it is the frontend's job to conform to traditional gender roles. |
 | age | no| Any positive integer.  |
 
-The response to this will __always__ have a 'status' property.
+The response to this will either return a 404 because the poll was not found, or it will __always__ have a 'status' property. The status will either be 'success' or 'error'
 
-If the status is 'error', then it will __always__ have an 'error' property that will be one of these messages:
+***error***
 
- - 'გთხოვთ შეიყვანოთ სწორი 9 ნიშნა ნომერი!'
-  
- - 'ეს ნომერი ერთხელ უკვე გამოყენებული იქნა!'
+> If the status is 'error', then it will __always__ have an 'error'
+> property that will be one of these messages:
+> 
+>  - 'გთხოვთ შეიყვანოთ სწორი 9 ნიშნა ნომერი!'
+>  
+>  - 'ეს ნომერი ერთხელ უკვე გამოყენებული იქნა!'
+>  
+>  - 'გთხოვთ აირჩიოთ კანდიდატი!'
+>  
+>  - 'გთხოვთ აირჩიოთ ამ გამოკითხვის შესაბამისი კანდიდატი!' **This should never occur, as both the vote ID and poll ID should be already
+> existing values retrieved from the API**
+>  
+>  - 'მესიჯის გაგზავნისას დაფიქსირდა შეცდომა.'
+>  - 'შეყვანილი პაროლი არასწორია!' **If and only if the poll has a password**
 
-If the status is 'success', then there will be a data attribute with 2 more attributes: 
+***success***
 
- 1. 'message'
-		 The message will contain a string saying the SMS is sent.
- 2. 'link'
-		 The link will be the route that should be used for verification of this specific voter, as the link contains an unique id to their vote.
+> If the status is 'success', then there will be a data attribute with 2
+> more attributes: 
+> 
+>  1. 'message' 		 The message will contain a string saying the SMS is sent.
+>  2. 'link' 		 The link will be the route that should be used for verification of this specific voter, as the link contains an unique id
+> to their vote.
 
 
 ## POST: '/api/vote/{id}/verify/'
@@ -69,6 +153,6 @@ If the status is 'success', then there will be a data attribute with 2 more attr
 This route may return 3 things:
 
  - A 404 because a vote with the given ID was not found. This should never happen as you should __always__ be acquiring this link from a post request to '/api/vote/'
- - A JSON with a 'status' property of 'success'
+ - A JSON with a 'status' property of 'success'. This means that the vote has been verified.
  - An error saying 'შეყვანილი ვერიფიკაციის კოდი არასწორია!'
 

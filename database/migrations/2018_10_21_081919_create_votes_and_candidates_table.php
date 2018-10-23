@@ -18,10 +18,10 @@ class CreateVotesAndCandidatesTable extends Migration
 
             //Hashed phone number
             $table->string('name');
-            $table->string('number');
-            $table->string('websiteLink');
-            $table->string('socialMediaLink');
-            $table->string('imageLink');
+            $table->string('number')->nullable();;
+            $table->string('websiteLink')->nullable();;
+            $table->string('socialMediaLink')->nullable();;
+            $table->string('imageLink')->nullable();;
 
             $table->timestamps();
         });

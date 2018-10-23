@@ -13,8 +13,12 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/', 'ApiController@index');
+Route::get('/poll/{id}', 'PollController@index');
 
-Route::post('/vote', 'ApiController@vote');
+Route::post('/poll/{id}/vote', 'PollController@vote');
 
-Route::post('/vote/{id}/verify', 'ApiController@verify');
+Route::post('/vote/{id}/verify', 'PollController@verify');
+
+Route::get('/', 'MainController@index');
+
+Route::post('/poll/create', 'MainController@createPoll');

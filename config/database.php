@@ -1,17 +1,18 @@
 <?php
 
-$url = parse_url(getenv("DATABASE_URL"));
+$url = getenv("DATABASE_URL", false);
 
 $conn = 'mysql';
 
-if(isset($url)){ 
-    $host = $url["host"];
-    $username = $url["user"];
-    $password = $url["pass"];
-    $database = substr($url["path"], 1);
+// if(!$url){
+//     $url = parse_url($url);
+//     $host = $url["host"];
+//     $username = $url["user"];
+//     $password = $url["pass"];
+//     $database = substr($url["path"], 1);
 
-    $conn = 'pgsql';
-}
+//     $conn = 'pgsql';
+// }
 
 return [
 

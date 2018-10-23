@@ -6,14 +6,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Candidate;
 use App\Vote;
+use App\Poll;
 use GuzzleHttp\Client as HTTPClient;
 use GuzzleHttp\Psr7\Request as HTTPRequest;
 
-class ApiController extends Controller
+class PollController extends Controller
 {
     //
-    public function index(){
-        $candidates = Candidate::all();
+    public function index($id){
+        $poll = Poll::findOrFail($id);
+        $candidates = $poll->candidates;
         $data = array();
 
         foreach($candidates as $candidate){
@@ -23,11 +25,21 @@ class ApiController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'data' => $data
+            'data' => [
+                'poll' => $poll
+            ]
         ]);
     }
 
-    public function vote(Request $request){
+    public function vote(Request $request, $id){
+        $poll = Poll::findOrFail($id);
+
+        if($poll->password !== null){
+            if(!Hash::check($request->input('password'), $poll->password)){
+                return $this->returnError('შეყვანილი პაროლი არასწორია!');
+            }
+        }
+        
         $number = $request->input('number');
     
         // if(!$this->verifyCaptcha($request)){
@@ -40,17 +52,25 @@ class ApiController extends Controller
 
         $candidateId = $request->input('candidateId');
 
-        //check if phone # is valid
-        $toMatch = '#^[+][1-9]{1}[0-9]{3,14}#';
-        if(!preg_match($toMatch , $number)) {
-            return $this->returnError('გთხოვთ შეიყვანოთ სწორი ნომერი!');
+        if(Candidate::where('poll_id', $poll->id)->where('id', $candidateId)->count() == 0){
+            return $this->returnError('გთხოვთ აირჩიოთ ამ გამოკითხვის შესაბამისი კანდიდატი!');
         }
 
-        //check if the number has been used before(compare hash to database hashes)
-        foreach(Vote::where('status', 'verified')->get() as $vote){
-            if(Hash::check($number, $vote->number)){
-                return $this->returnError('ეს ნომერი ერთხელ უკვე გამოყენებულია!');
-            };
+        if($poll->requirePhoneAuth == 'True'){
+            //check if phone # is valid
+            $toMatch = '#^[+][1-9]{1}[0-9]{3,14}#';
+            if(!preg_match($toMatch , $number)) {
+                return $this->returnError('გთხოვთ შეიყვანოთ სწორი ნომერი!');
+            }
+
+            
+        
+            //check if the number has been used before(compare hash to database hashes)
+            foreach(Vote::where('status', 'verified')->where('poll_id', $poll->id)->get() as $vote){
+                if(Hash::check($number, $vote->number)){
+                    return $this->returnError('ეს ნომერი ერთხელ უკვე გამოყენებულია!');
+                };
+            }
         }
 
         $vote = new Vote;
@@ -59,19 +79,31 @@ class ApiController extends Controller
         //is stored in the database as a hash
         $pin = rand(10000, 99999);
 
-        //number and pin hashing
-        $vote->number = Hash::make($number);
-        $vote->pin = Hash::make($pin);
-
         $vote->age = $request->input('age');
         $vote->gender = $request->input('gender');
         $vote->candidate_id = $candidateId;
         $vote->status = 'unverified';
 
+        //number and pin hashing
+        if($poll->requirePhoneAuth == 'False'){
+            $vote->number = '';
+            $vote->pin = '';
+        } else {
+            $vote->number = Hash::make($number);
+            $vote->pin = Hash::make($pin);
+
+            $res = $this->sendMessage($number, 'გამარჯობა! თქვენი Pollitic-ის ვერიფიკაციის კოდი არის: ' . $pin);
+            if(!$res){
+                return $this->returnError('მესიჯის გაგზავნისას დაფიქსირდა შეცდომა.');
+            }
+        }
+
         $res = $this->sendMessage($number, 'გამარჯობა! თქვენი Pollitic-ის ვერიფიკაციის კოდი არის: ' . $pin);
         if(!$res){
             return $this->returnError('მესიჯის გაგზავნისას დაფიქსირდა შეცდომა.');
         }
+
+        $vote->poll_id = $poll->id;
 
         $vote->save();
 

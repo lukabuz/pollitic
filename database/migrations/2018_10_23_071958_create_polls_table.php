@@ -20,6 +20,9 @@ class CreatePollsTable extends Migration
             $table->string('description');
             $table->string('imageLink')->nullable();
 
+            //password hash if password is chosen. null if no password is needed
+            $table->string('password')->nullable();
+
             //A Serialized array of what charts to show.
             //These values are provided and parsed by the front-end
             $table->longText('charts');
@@ -43,8 +46,7 @@ class CreatePollsTable extends Migration
             $table->unsignedInteger('poll_id');
             $table->foreign('poll_id')
                 ->references('id')
-                ->on('polls')
-                ->onDelete('cascade');
+                ->on('polls');
         });
 
         Schema::table('candidates', function (Blueprint $table) {
