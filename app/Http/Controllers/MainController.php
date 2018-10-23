@@ -15,6 +15,13 @@ class MainController extends Controller
     public function index(){
         $polls = Poll::where('isListed', 'True')->get();
 
+        $data = array();
+
+        foreach($polls as $poll){
+            $poll->totalVotes = $poll->totalVotes();
+            array_push($data, $poll);
+        }
+
         return response()->json([
             'status' => 'success',
             'data' => [

@@ -25,6 +25,7 @@ Example response:
                     "cookieValue": "m1mgTNzOqVQO4xaRJyvZASzTr",
                     "created_at": "2018-10-23 10:42:59",
                     "updated_at": "2018-10-23 10:42:59"
+                    "totalVotes" : 0,
                 },
             ]
         }
