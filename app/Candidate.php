@@ -15,4 +15,9 @@ class Candidate extends Model
     {
         return $this->hasMany('App\Vote');
     }
+
+    //
+    public function poll(){
+        return $this->belongsTo('App\Poll');
+    }
 }

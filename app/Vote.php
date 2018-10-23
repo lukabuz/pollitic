@@ -13,4 +13,9 @@ class Vote extends Model
     public function candidate(){
         return $this->belongsTo('App\Candidate');
     }
+
+    //
+    public function poll(){
+        return $this->belongsTo('App\Poll');
+    }
 }
