@@ -4,8 +4,17 @@
 
 Pollitic is a web application that allows people to vote for their preferred candidates using a secure mobile authenticated system that doesn't store any of the user's raw data.
 
-## GET: '/api/'
+## GET: '/api/ongoing' and GET: '/api/closed'
+These two routes behave in exactly the same way, the only difference being that one returns only ongoing polls and one returns only closed ones. |
+
 Returns a JSON Object with 'data', which contains a 'polls' attribute which is an array of all public polls.
+
+Required GET Variables
+
+| Name | Required | Details |
+|--|--|--|
+| sort | no | A string that is either 'new' or 'hot'. new returns polls sorted from newest to oldest, 'hot' returns polls sorted by their votecount |
+| number | no | An integer that specifys how many posts the requests want to retrieve
 
 Example response:
 

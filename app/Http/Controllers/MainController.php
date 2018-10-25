@@ -8,12 +8,69 @@ use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use App\Poll;
 use App\Candidate;
+use App\Vote;
 
 class MainController extends Controller
 {
     //
-    public function index(){ 
-        $polls = Poll::where('isListed', 'True')->get();
+    public function ongoing(Request $request){ 
+        $polls = Poll::where('isListed', 'True')->where('isClosed', 'False');
+
+        if($request->exists('number')){
+            $polls = $polls->take($request->input('number'));
+        } else {
+            $polls = $polls->get();
+        }
+
+        if($request->exists('sort')){
+            if($request->input('sort') == 'new'){
+                $polls = $polls->orderBy('created_at', 'desc')->get();
+            } else {
+                
+                $polls = $polls->get();
+                $polls = $polls->sortByDesc(function ($poll, $key) {
+                    return Vote::where('poll_id', $poll->id)->sum('value');
+                });
+            }
+        } else {
+            $polls = $polls->get();
+        }
+
+        $data = array();
+
+        foreach($polls as $poll){
+            $poll->totalVotes = $poll->totalVotes();
+            array_push($data, $poll);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'polls' => $polls
+            ]
+        ]);
+    }
+
+    public function closed(Request $request){ 
+        $polls = Poll::where('isListed', 'True')->where('isClosed', 'True');
+        
+        if($request->exists('number')){
+            $polls = $polls->take($request->input('number'));
+        } else {
+        }
+
+        if($request->exists('sort')){
+            if($request->input('sort') == 'new'){
+                $polls = $polls->orderBy('created_at', 'desc')->get();
+            } else {
+                $polls = $polls->get();
+                $polls = $polls->sortByDesc(function ($poll, $key) {
+                    return Vote::where('poll_id', $poll->id)->count();
+                });
+            }
+        } else {
+            $polls = $polls->get();
+        }
 
         $data = array();
 

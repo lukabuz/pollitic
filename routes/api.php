@@ -19,6 +19,8 @@ Route::post('/poll/{id}/vote', 'PollController@vote');
 
 Route::post('/vote/{id}/verify', 'PollController@verify');
 
-Route::get('/', 'MainController@index');
+Route::get('/ongoing', 'MainController@ongoing');
+
+Route::get('/closed', 'MainController@closed');
 
 Route::post('/poll/create', 'MainController@createPoll');
