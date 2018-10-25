@@ -12,7 +12,7 @@ use App\Candidate;
 class MainController extends Controller
 {
     //
-    public function index(){
+    public function index(){ 
         $polls = Poll::where('isListed', 'True')->get();
 
         $data = array();
@@ -38,16 +38,23 @@ class MainController extends Controller
         if(!$request->exists('requirePhoneAuth') || $request->input('requirePhoneAuth') == '') { $error = 'გთხოვთ მიუთითოთ გსურთ თუ არა ხმის მიცემისას მობილური ვერიფიკაციის გამოყენება'; }
         if(!$request->exists('isListed') || $request->input('isListed') == '') { $error = 'გთხოვთ მიუთითოთ გსურთ თუ არა გამოკითხვის გასაჯაროება(საიტზე ნებისმიერი შემომსვლელისათვის მისი გამოჩენა)'; }
         if(!$request->exists('candidates') || $request->input('candidates') == '') { $error = 'გთხოვთ მიუთითოთ მინიმუმ 1 არჩევანი'; }
+        if(!$request->exists('closingDate') || $request->input('closingDate') == '') { $error = 'გთხოვთ მიუთითოთ გამოკითხვის დამთავრების თარიღი.'; }
+
+        try{
+            $closingDate = Carbon::parse($request->input('closingDate'));
+        } catch(\Exception $er) {
+            $error = 'გთხოვთ შეიყვანოთ სწორი თარიღის ფორამატი';
+        }
 
         if(isset($error)) { return $this->returnError($error); }
         
-
         $poll = new Poll;
 
         $poll->name = $request->input('name');
         $poll->description = $request->input('description');
         $poll->charts = $request->input('charts');
         $poll->cookieValue = '';
+        $poll->closingDate = $closingDate;
 
         if($request->input('requirePhoneAuth') == 'True'){
             $poll->requirePhoneAuth = 'True';
