@@ -19,22 +19,25 @@ class MainController extends Controller
         if($request->exists('number')){
             $polls = $polls->take($request->input('number'));
         } else {
-            $polls = $polls->get();
+            $notGotten = True;
         }
 
         if($request->exists('sort')){
             if($request->input('sort') == 'new'){
                 $polls = $polls->orderBy('created_at', 'desc')->get();
+                $notGotten = False;
             } else {
-                
                 $polls = $polls->get();
+                $notGotten = False;
                 $polls = $polls->sortByDesc(function ($poll, $key) {
                     return Vote::where('poll_id', $poll->id)->sum('value');
                 });
             }
         } else {
-            $polls = $polls->get();
+            $notGotten = True;
         }
+
+        if($notGotten) { $polls = $polls->get(); }
 
         $data = array();
 
