@@ -1,18 +1,20 @@
 <?php
 
-$url = getenv("DATABASE_URL", false);
+if(getenv("HEROKU_DEPLOY", false)){
+    $url = getenv("DATABASE_URL", false);
 
-$conn = 'mysql';
+    $url = parse_url($url);
+    $host = $url["host"];
+    $username = $url["user"];
+    $password = $url["pass"];
+    $database = substr($url["path"], 1);
 
-// if(!$url){
-//     $url = parse_url($url);
-//     $host = $url["host"];
-//     $username = $url["user"];
-//     $password = $url["pass"];
-//     $database = substr($url["path"], 1);
+    $conn = 'pgsql';
+} else {
+    $conn = 'mysql';
+}
 
-//     $conn = 'pgsql';
-// }
+
 
 return [
 
