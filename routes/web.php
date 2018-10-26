@@ -11,6 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('main');
+Route::post('/', function () {
+    return 1;
 });

@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Candidate;
 use App\Vote;
 use App\Poll;
+use App\PollQuestionAnswer;
+use App\PollQuestion;
 use GuzzleHttp\Client as HTTPClient;
 use GuzzleHttp\Psr7\Request as HTTPRequest;
 
@@ -15,6 +17,7 @@ class PollController extends Controller
     //
     public function index($id){
         $poll = Poll::findOrFail($id);
+
         $candidates = $poll->candidates;
         $data = array();
 
@@ -23,15 +26,25 @@ class PollController extends Controller
             array_push($data, $candidate);
         }
 
+        $data = array();
+
+        foreach($candidates as $candidate){
+            $candidate->voteCount = $candidate->voteCount();
+            array_push($data, $candidate);
+        }
+
+        $poll->questions;
+
         return response()->json([
             'status' => 'success',
             'data' => [
-                'poll' => $poll
+                'poll' => $poll,
             ]
         ]);
     }
 
     public function vote(Request $request, $id){
+        return $request;
         $poll = Poll::findOrFail($id);
 
         if($poll->password !== null){
@@ -62,9 +75,7 @@ class PollController extends Controller
             if(!preg_match($toMatch , $number)) {
                 return $this->returnError('გთხოვთ შეიყვანოთ სწორი ნომერი!');
             }
-
             
-        
             //check if the number has been used before(compare hash to database hashes)
             foreach(Vote::where('status', 'verified')->where('poll_id', $poll->id)->get() as $vote){
                 if(Hash::check($number, $vote->number)){
@@ -106,6 +117,14 @@ class PollController extends Controller
         $vote->poll_id = $poll->id;
 
         $vote->save();
+
+        foreach($request->questions as $question){
+            $answer = new PollQuestionAnswer;
+            $answer->vote_id = $vote['id'];
+            $answer->poll_question_id = $question['id'];
+            $answer->answer = $question['answer'];
+            $answer->save();
+        }
 
         return response()->json([
             'status' => 'success',

@@ -18,6 +18,11 @@ class Poll extends Model
         return $this->hasMany('App\Vote');
     }
 
+    public function questions()
+    {
+        return $this->hasMany('App\PollQuestion');
+    }
+
     public function totalVotes(){
         return Vote::where('status', 'verified')->where('poll_id', $this->id)->count();
     }

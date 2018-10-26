@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use App\Poll;
+use App\PollQuestionAnswer;
+use App\PollQuestion;
 use App\Candidate;
 use App\Vote;
 
@@ -100,6 +102,8 @@ class MainController extends Controller
         if(!$request->exists('candidates') || $request->input('candidates') == '') { $error = 'გთხოვთ მიუთითოთ მინიმუმ 1 არჩევანი'; }
         if(!$request->exists('closingDate') || $request->input('closingDate') == '') { $error = 'გთხოვთ მიუთითოთ გამოკითხვის დამთავრების თარიღი.'; }
 
+        if(count($request->questions) > 5){ $error = 'გთხოვთ დასვათ მაქსიმუმ 5 დამატებითი კითხვა.'; }
+
         try{
             $closingDate = Carbon::parse($request->input('closingDate'));
         } catch(\Exception $er) {
@@ -143,6 +147,13 @@ class MainController extends Controller
             $newCandidate->name = $candidate;
             $newCandidate->poll_id = $poll->id;
             $newCandidate->save();
+        }
+
+        foreach($request->questions as $question){
+            $newQuestion = new PollQuestion;
+            $newQuestion->question = $question;
+            $newQuestion->poll_id = $poll->id;
+            $newQuestion->save();
         }
 
         return response()->json([
