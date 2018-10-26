@@ -94,7 +94,7 @@ class MainController extends Controller
         //check if all required fields are given
         if(!$request->exists('name') || $request->input('name') == '') { $error = 'გთხოვთ შეიყვანოთ გამოკითხვის სათაური'; }
         if(!$request->exists('description') || $request->input('description') == '') { $error = 'გთხოვთ შეიყვანოთ გამოკითხვის აღწერა'; }
-        if(!$request->exists('charts') || $request->input('charts') == '') { $error = 'გთხოვთ მიუთითოთ რეზულტატების გამოსახვის მეთოდი'; }
+        // if(!$request->exists('charts') || $request->input('charts') == '') { $error = 'გთხოვთ მიუთითოთ რეზულტატების გამოსახვის მეთოდი'; }
         if(!$request->exists('requirePhoneAuth') || $request->input('requirePhoneAuth') == '') { $error = 'გთხოვთ მიუთითოთ გსურთ თუ არა ხმის მიცემისას მობილური ვერიფიკაციის გამოყენება'; }
         if(!$request->exists('isListed') || $request->input('isListed') == '') { $error = 'გთხოვთ მიუთითოთ გსურთ თუ არა გამოკითხვის გასაჯაროება(საიტზე ნებისმიერი შემომსვლელისათვის მისი გამოჩენა)'; }
         if(!$request->exists('candidates') || $request->input('candidates') == '') { $error = 'გთხოვთ მიუთითოთ მინიმუმ 1 არჩევანი'; }
@@ -112,7 +112,7 @@ class MainController extends Controller
 
         $poll->name = $request->input('name');
         $poll->description = $request->input('description');
-        $poll->charts = $request->input('charts');
+        $poll->charts = '';
         $poll->cookieValue = '';
         $poll->closingDate = $closingDate;
 

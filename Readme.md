@@ -58,7 +58,6 @@ Creates a poll based on the request.
 | name | yes | name of the poll |  |
 | description | yes | description of poll |  |
 | password | no | if this value is provided, the poll will require all voters to enter this password |  |
-| charts | yes | this is a string value for the frontend so it can store how the user chose his poll results to be displayed(you can have this as a serialized array, stringified json, anything that is a string.) |  |
 | requirePhoneAuth | yes | string boolean value of if this poll requires phone authentication | 'True' |
 | isListed | yes | string boolean value of if this poll is unlisted or not | 'True' |
 | candidates | yes | an array of candidates | ['name1', 'name2'] |
