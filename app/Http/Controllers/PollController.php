@@ -18,21 +18,7 @@ class PollController extends Controller
     public function index($id){
         $poll = Poll::findOrFail($id);
 
-        $candidates = $poll->candidates;
-        $data = array();
-
-        foreach($candidates as $candidate){
-            $candidate->voteCount = $candidate->voteCount();
-            array_push($data, $candidate);
-        }
-
-        $data = array();
-
-        foreach($candidates as $candidate){
-            $candidate->voteCount = $candidate->voteCount();
-            array_push($data, $candidate);
-        }
-
+        $poll->candidates;
         $poll->questions;
 
         return response()->json([
