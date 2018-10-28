@@ -63,6 +63,7 @@ Creates a poll based on the request.
 | candidates | yes | an array of candidates | ['name1', 'name2'] |
 | questions | no | an array of non mandatory questions that the user wants voters to answer. maximum number of questions is 5 | ['question 1', 'question2'] |
 | closingDate | yes | a datetime string of when the poll should be closed | '2018-10-24 07:54:16' |
+| image | no | an image file that is 4MB max. |  |
 
 The response to this will __always__ have a 'status' property. The status will either be 'success' or 'error'
 
@@ -101,7 +102,7 @@ Example response:
                         "number":null,
                         "websiteLink":null,
                         "socialMediaLink":null,
-                        "imageLink":null,
+                        "imageLink":'',
                         "created_at":"2018-10-23 10:42:59",
                         "updated_at":"2018-10-23 10:42:59",
                         "poll_id":1,

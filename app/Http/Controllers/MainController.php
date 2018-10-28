@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use App\Poll;
 use App\PollQuestionAnswer;
@@ -18,28 +19,25 @@ class MainController extends Controller
     public function ongoing(Request $request){ 
         $polls = Poll::where('isListed', 'True')->where('isClosed', 'False');
 
-        $notGotten = True;
-
         if($request->exists('number')){
-            $polls = $polls->take($request->input('number'));
+            $polls = $polls->take($request->input('number'))->get();
+        } else {
+            $polls->get();
         }
 
         if($request->exists('sort')){
             if($request->input('sort') == 'new'){
-                $polls = $polls->orderBy('created_at', 'desc')->get();
-                $notGotten = False;
+                $polls = $polls->sortByDesc(function($poll)
+                {
+                    return $poll->id;
+                });
             } else {
-                $polls = $polls->get();
-                $notGotten = False;
                 $polls = $polls->sortByDesc(function ($poll, $key) {
                     return Vote::where('poll_id', $poll->id)->count();
                 });
             }
         } else {
-            $notGotten = True;
         }
-
-        if($notGotten) { $polls = $polls->get(); }
 
         $data = array();
 
@@ -51,7 +49,7 @@ class MainController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => [
-                'polls' => $polls
+                'polls' => $polls,
             ]
         ]);
     }
@@ -115,6 +113,13 @@ class MainController extends Controller
             $error = 'გთხოვთ შეიყვანოთ სწორი თარიღის ფორამატი';
         }
 
+        if($request->hasFile('image')){
+            if($request->File('image')->getClientSize() > 4000000){ $error = 'სურათის ზომა არ უნდა აღემატებოდეს 4 მეგაბაიტს.'; }
+            $fileNameToStore = 'PollImage_'. str_random(5) . '_' . time() . '.' . $request->file('image')->getClientOriginalExtension();
+            $request->file('image')->storeAs('photos', $fileNameToStore, 's3', 'public');
+            $fileNameToStore = 'https://s3.' . env('AWS_DEFAULT_REGION') . '.amazonaws.com/laravel-pollitic/photos/' . $fileNameToStore;
+        }
+
         if(isset($error)) { return $this->returnError($error); }
         
         $poll = new Poll;
@@ -123,6 +128,10 @@ class MainController extends Controller
         $poll->description = $request->input('description');
         $poll->charts = '';
         $poll->cookieValue = '';
+        if($fileNameToStore){
+            $poll->imageLink = $fileNameToStore;
+        }
+
         $poll->closingDate = $closingDate;
 
         if($request->input('requirePhoneAuth') == 'True'){
@@ -139,10 +148,6 @@ class MainController extends Controller
         
         if($request->exists('password') && $request->input('password') !== ''){
             $poll->password = Hash::make($request->input('password'));
-        }
-
-        if($request->exists('imageLink') && $request->input('imageLink') !== ''){
-            $poll->imageLink = $request->input('imageLink');
         }
 
         $poll->save();
