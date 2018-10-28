@@ -102,7 +102,7 @@ class MainController extends Controller
         if(!$request->exists('candidates') || $request->input('candidates') == '') { $error = 'გთხოვთ მიუთითოთ მინიმუმ 1 არჩევანი'; }
         if(!$request->exists('closingDate') || $request->input('closingDate') == '') { $error = 'გთხოვთ მიუთითოთ გამოკითხვის დამთავრების თარიღი.'; }
 
-        if(!$request->exists('questions') && count($request->questions) > 5){ $error = 'გთხოვთ დასვათ მაქსიმუმ 5 დამატებითი კითხვა.'; }
+        if($request->exists('questions') && count($request->questions) > 5){ $error = 'გთხოვთ დასვათ მაქსიმუმ 5 დამატებითი კითხვა.'; }
 
         try{
             $closingDate = Carbon::parse($request->input('closingDate'));
