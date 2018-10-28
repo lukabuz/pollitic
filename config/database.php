@@ -1,6 +1,6 @@
 <?php
 
-if(getenv("HEROKU_DEPLOY", false)){
+if(getenv('HEROKU_DEPLOY', false)){
     $url = getenv("DATABASE_URL", false);
 
     $url = parse_url($url);
@@ -11,6 +11,11 @@ if(getenv("HEROKU_DEPLOY", false)){
 
     $conn = 'pgsql';
 } else {
+    $url = '';
+    $host = '';
+    $username = '';
+    $password = '';
+    $database = '';
     $conn = 'mysql';
 }
 
