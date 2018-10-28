@@ -18,10 +18,10 @@ class MainController extends Controller
     public function ongoing(Request $request){ 
         $polls = Poll::where('isListed', 'True')->where('isClosed', 'False');
 
+        $notGotten = True;
+
         if($request->exists('number')){
             $polls = $polls->take($request->input('number'));
-        } else {
-            $notGotten = True;
         }
 
         if($request->exists('sort')){
@@ -32,7 +32,7 @@ class MainController extends Controller
                 $polls = $polls->get();
                 $notGotten = False;
                 $polls = $polls->sortByDesc(function ($poll, $key) {
-                    return Vote::where('poll_id', $poll->id)->sum('value');
+                    return Vote::where('poll_id', $poll->id)->count();
                 });
             }
         } else {
@@ -58,24 +58,29 @@ class MainController extends Controller
 
     public function closed(Request $request){ 
         $polls = Poll::where('isListed', 'True')->where('isClosed', 'True');
-        
+
+        $notGotten = True;
+
         if($request->exists('number')){
             $polls = $polls->take($request->input('number'));
-        } else {
         }
 
         if($request->exists('sort')){
             if($request->input('sort') == 'new'){
                 $polls = $polls->orderBy('created_at', 'desc')->get();
+                $notGotten = False;
             } else {
                 $polls = $polls->get();
+                $notGotten = False;
                 $polls = $polls->sortByDesc(function ($poll, $key) {
                     return Vote::where('poll_id', $poll->id)->count();
                 });
             }
         } else {
-            $polls = $polls->get();
+            $notGotten = True;
         }
+
+        if($notGotten) { $polls = $polls->get(); }
 
         $data = array();
 
