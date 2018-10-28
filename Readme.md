@@ -74,7 +74,7 @@ The response to this will __always__ have a 'status' property. The status will e
 
  - If the status is success, then there will be a message attribute saying the poll is created, and a data attribute with a poll attribute containing the info for the poll that was created.
 
-## GET: '/api/poll/{id}'
+## GET: '/api/poll/{id}/view'
 Returns a JSON Object with 'data' , which contains a 'poll' attribute with all the poll and candidate information. If the poll is not found, a 404 is returned.
 
 Example response: 

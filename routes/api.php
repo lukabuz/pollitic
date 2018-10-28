@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/poll/{id}', 'PollController@index');
+Route::get('/poll/{id}/view', 'PollController@index');
 
 Route::post('/poll/{id}/vote', 'PollController@vote');
 
