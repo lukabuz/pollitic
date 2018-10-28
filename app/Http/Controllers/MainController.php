@@ -149,11 +149,13 @@ class MainController extends Controller
             $newCandidate->save();
         }
 
-        foreach($request->questions as $question){
-            $newQuestion = new PollQuestion;
-            $newQuestion->question = $question;
-            $newQuestion->poll_id = $poll->id;
-            $newQuestion->save();
+        if($request->exists('questions')){
+            foreach($request->questions as $question){
+                $newQuestion = new PollQuestion;
+                $newQuestion->question = $question;
+                $newQuestion->poll_id = $poll->id;
+                $newQuestion->save();
+            }
         }
 
         return response()->json([
