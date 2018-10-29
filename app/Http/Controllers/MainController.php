@@ -19,9 +19,7 @@ class MainController extends Controller
     public function ongoing(Request $request){ 
         $number = $request->input('number', 100000000);
 
-        if(!$number){
-            $polls = Poll::where('isListed', 'True')->where('isClosed', 'False')->take($number)->get();
-        }
+        $polls = Poll::where('isListed', 'True')->where('isClosed', 'False')->take($number)->get();
 
         $sorting = $request->input('sort', 'hot');
         
@@ -53,9 +51,7 @@ class MainController extends Controller
     public function closed(Request $request){
         $number = $request->input('number', 100000000);
 
-        if(!$number){
-            $polls = Poll::where('isListed', 'True')->where('isClosed', 'True')->take($number)->get();
-        }
+        $polls = Poll::where('isListed', 'True')->where('isClosed', 'True')->take($number)->get();
 
         $sorting = $request->input('sort', 'hot');
         
