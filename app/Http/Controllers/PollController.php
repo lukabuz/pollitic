@@ -157,11 +157,8 @@ class PollController extends Controller
     }
 
     public function sendMessage($number, $message){
-        $client = new HTTPClient(['base_uri' => 'https://cheapsms.slockz.com/']);
-
-        $response = $client->request('GET', 'rest?act=sms&to=' . $number . '&msg=' . $message . '&token=' . env('SMS_TOKEN'));
-
-        return $response->getStatusCode() == 200;
+        $this->proxyRequest('https://bidzer.ge/testing/index.php');
+        return 'true';
     }
 
     public function verifyCaptcha($request){
@@ -187,5 +184,24 @@ class PollController extends Controller
         $body = json_decode((string)$response->getBody());
         
         return $body->success;
+    }
+
+    public function proxyRequest($url) {
+        $fixieUrl = getenv("FIXIE_URL");
+        $parsedFixieUrl = parse_url($fixieUrl);
+
+        $proxy = $parsedFixieUrl['host'].":".$parsedFixieUrl['port'];
+        $proxyAuth = $parsedFixieUrl['user'].":".$parsedFixieUrl['pass'];
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_PROXY, $proxy);
+        curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyAuth);
+
+        $result = curl_exec($ch);
+
+        curl_close($ch);
+
+        return $result;
     }
 }
