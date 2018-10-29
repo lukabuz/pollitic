@@ -133,7 +133,7 @@ The {id} is the unique ID of the poll currently being voted on.
 
 | Name | Required | Details |
 |--|--|--|
-| number | yes| Phone number of voter. a '+' plus 12 digit number(+995599123456) without any whitespace or dashes. |
+| number | no | Phone number of voter. a '+' plus 12 digit number(+995599123456) without any whitespace or dashes. |
 | candidateId | yes| ID of the candidate the person voted for. The candidateId for each candidate is provided in the response of the '/api' route as the 'id' attribute. |
 | gender | no| Any string, the backend just treats it as a string and puts it in the database. The backend chose to treat this as just a string instead of a binary value because it is the frontend's job to conform to traditional gender roles. |
 | age | no| Any positive integer.  |
@@ -175,12 +175,14 @@ The response to this will either return a 404 because the poll was not found, or
 
 ***success***
 
-> If the status is 'success', then there will be a data attribute with 2
+> If the status is 'success', and the poll requires a phone number to vote, then there will be a data attribute with 2
 > more attributes: 
 > 
 >  1. 'message' 		 The message will contain a string saying the SMS is sent.
 >  2. 'link' 		 The link will be the route that should be used for verification of this specific voter, as the link contains an unique id
 > to their vote.
+>
+> If the poll does not require a phone number to vote, the status will be success, and there will only be a 'message' attribute.
 
 
 ## POST: '/api/vote/{id}/verify/'

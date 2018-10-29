@@ -78,7 +78,6 @@ class PollController extends Controller
         $vote->age = $request->input('age');
         $vote->gender = $request->input('gender');
         $vote->candidate_id = $candidateId;
-        $vote->status = 'unverified';
 
         //number and pin hashing
         if ($poll->requirePhoneAuth == 'False') {
@@ -88,7 +87,7 @@ class PollController extends Controller
         } else {
             $vote->number = Hash::make($number);
             $vote->pin = Hash::make($pin);
-
+            $vote->status = 'unverified';
             $res = $this->sendMessage($number, 'გამარჯობა! თქვენი Pollitic-ის ვერიფიკაციის კოდი არის: ' . $pin);
             if (!$res) {
                 return $this->returnError('მესიჯის გაგზავნისას დაფიქსირდა შეცდომა.');
@@ -114,13 +113,22 @@ class PollController extends Controller
             }
         }
 
-        return response()->json([
-            'status' => 'success',
-            'data' => [
-                'message' => 'ვერიფიკაციისათვის გთხოვთ შეამოწმოთ ჩვენი გამოგზავნილი SMS მესიჯი',
-                'link' => url('/api/vote/' . $vote->id . '/' . 'verify/')
-            ]
-        ]);
+        if($poll->requirePhoneAuth){
+            return response()->json([
+                'status' => 'success',
+                'data' => [
+                    'message' => 'ვერიფიკაციისათვის გთხოვთ შეამოწმოთ ჩვენი გამოგზავნილი SMS მესიჯი',
+                    'link' => url('/api/vote/' . $vote->id . '/' . 'verify/')
+                ]
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'success',
+                'data' => [
+                    'message' => 'თქვენი ხმა წარმატებით დაემატა!'
+                ]
+            ]);
+        }        
     }
 
     public function verify(Request $request, $id){
