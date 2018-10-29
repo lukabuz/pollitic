@@ -30,7 +30,6 @@ class PollController extends Controller
     }
 
     public function vote(Request $request, $id){
-        return $request;
         $poll = Poll::findOrFail($id);
 
         if($poll->password !== null){
