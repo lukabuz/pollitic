@@ -17,33 +17,29 @@ class MainController extends Controller
 {
     //
     public function ongoing(Request $request){ 
-        $polls = Poll::where('isListed', 'True')->where('isClosed', 'False');
+        $number = $request->input('number', 100000000);
 
-        if($request->exists('number')){
-            $polls = $polls->take($request->input('number'))->get();
-        } else {
-            $polls->get();
+        if(!$number){
+            $polls = Poll::where('isListed', 'True')->where('isClosed', 'False')->take($number)->get();
         }
 
-        if($request->exists('sort')){
-            if($request->input('sort') == 'new'){
-                $polls = $polls->sortByDesc(function($poll)
-                {
-                    return $poll->id;
-                });
-            } else {
-                $polls = $polls->sortByDesc(function ($poll, $key) {
-                    return Vote::where('poll_id', $poll->id)->count();
-                });
-            }
+        $sorting = $request->input('sort', 'hot');
+        
+        if($sorting == 'new'){
+            $polls = $polls->sortByDesc(function($poll)
+            {
+                return $poll->id;
+            });
         } else {
+            $polls = $polls->sortByDesc(function ($poll, $key) {
+                return Vote::where('poll_id', $poll->id)->count();
+            });
         }
 
         $data = array();
 
         foreach($polls as $poll){
             $poll->totalVotes = $poll->totalVotes();
-            array_push($data, $poll);
         }
 
         return response()->json([
@@ -54,43 +50,36 @@ class MainController extends Controller
         ]);
     }
 
-    public function closed(Request $request){ 
-        $polls = Poll::where('isListed', 'True')->where('isClosed', 'True');
+    public function closed(Request $request){
+        $number = $request->input('number', 100000000);
 
-        $notGotten = True;
-
-        if($request->exists('number')){
-            $polls = $polls->take($request->input('number'));
+        if(!$number){
+            $polls = Poll::where('isListed', 'True')->where('isClosed', 'True')->take($number)->get();
         }
 
-        if($request->exists('sort')){
-            if($request->input('sort') == 'new'){
-                $polls = $polls->orderBy('created_at', 'desc')->get();
-                $notGotten = False;
-            } else {
-                $polls = $polls->get();
-                $notGotten = False;
-                $polls = $polls->sortByDesc(function ($poll, $key) {
-                    return Vote::where('poll_id', $poll->id)->count();
-                });
-            }
+        $sorting = $request->input('sort', 'hot');
+        
+        if($sorting == 'new'){
+            $polls = $polls->sortByDesc(function($poll)
+            {
+                return $poll->id;
+            });
         } else {
-            $notGotten = True;
+            $polls = $polls->sortByDesc(function ($poll, $key) {
+                return Vote::where('poll_id', $poll->id)->count();
+            });
         }
-
-        if($notGotten) { $polls = $polls->get(); }
 
         $data = array();
 
         foreach($polls as $poll){
             $poll->totalVotes = $poll->totalVotes();
-            array_push($data, $poll);
         }
 
         return response()->json([
             'status' => 'success',
             'data' => [
-                'polls' => $polls
+                'polls' => $polls,
             ]
         ]);
     }
