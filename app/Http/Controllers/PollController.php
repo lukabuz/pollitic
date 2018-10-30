@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use App\Candidate;
 use App\Vote;
 use App\Poll;
@@ -31,6 +32,7 @@ class PollController extends Controller
     }
 
     public function vote(Request $request, $id){
+        Log::info('Vote Request on Vote with ID ' . $id . ':\n' . serialize($request->all()));
         $poll = Poll::findOrFail($id);
 
         if ($poll->password !== null) {

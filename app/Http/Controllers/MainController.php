@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Poll;
 use App\PollQuestionAnswer;
@@ -84,6 +85,7 @@ class MainController extends Controller
 
     public function createPoll(Request $request)
     {
+        Log::info('Poll Creation Request:\n' . serialize($request->all()));
         //check if all required fields are given
         if (!$request->exists('name') || $request->input('name') == '') {
             $error = 'გთხოვთ შეიყვანოთ გამოკითხვის სათაური';
