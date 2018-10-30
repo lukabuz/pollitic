@@ -134,7 +134,7 @@ class MainController extends Controller
         $poll->description = $request->input('description');
         $poll->charts = '';
         $poll->cookieValue = '';
-        if ($fileNameToStore) {
+        if (isset($fileNameToStore)) {
             $poll->imageLink = $fileNameToStore;
         }
 

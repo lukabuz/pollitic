@@ -157,8 +157,8 @@ class PollController extends Controller
     }
 
     public function sendMessage($number, $message){
-        $this->proxyRequest('https://bidzer.ge/testing/index.php');
-        return 'true';
+        $url = 'https://sender.ge/api/send.php?apikey=' . env('SMS_TOKEN') . '&smsno=1&destination=' . $number . '&content=' . $message;
+        $response = $this->proxyRequest($url);
     }
 
     public function verifyCaptcha($request){
@@ -194,6 +194,7 @@ class PollController extends Controller
         $proxyAuth = $parsedFixieUrl['user'].":".$parsedFixieUrl['pass'];
 
         $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_PROXY, $proxy);
         curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyAuth);
@@ -201,7 +202,5 @@ class PollController extends Controller
         $result = curl_exec($ch);
 
         curl_close($ch);
-
-        return $result;
     }
 }
