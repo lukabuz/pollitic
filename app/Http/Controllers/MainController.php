@@ -110,7 +110,7 @@ class MainController extends Controller
         }
 
         try {
-            $closingDate = Carbon::parse($request->input('closingDate'));
+            $closingDate = Carbon::createFromTimestamp($request->input('closingDate'))->toDateTimeString();
         } catch (\Exception $er) {
             $error = 'გთხოვთ შეიყვანოთ სწორი თარიღის ფორამატი';
         }

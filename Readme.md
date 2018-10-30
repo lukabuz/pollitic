@@ -62,7 +62,7 @@ Creates a poll based on the request.
 | isListed | yes | string boolean value of if this poll is unlisted or not | 'True' |
 | candidates | yes | an array of candidates | ['name1', 'name2'] |
 | questions | no | an array of non mandatory questions that the user wants voters to answer. maximum number of questions is 5 | ['question 1', 'question2'] |
-| closingDate | yes | a datetime string of when the poll should be closed | '2018-10-24 07:54:16' |
+| closingDate | yes | a unix timestamp of when the poll should be closed | '1540935877' |
 | image | no | an image file that is 4MB max. |  |
 
 The response to this will __always__ have a 'status' property. The status will either be 'success' or 'error'
