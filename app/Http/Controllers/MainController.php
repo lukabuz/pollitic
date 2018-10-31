@@ -19,9 +19,9 @@ class MainController extends Controller
     //
     public function ongoing(Request $request)
     {
-        $number = $request->input('number', 100000000);
+        $number = $request->input('number', false);
 
-        $polls = Poll::where('isListed', 'True')->where('isClosed', 'False')->take($number)->get();
+        $polls = Poll::where('isListed', 'True')->where('isClosed', 'False')->get();
 
         $sorting = $request->input('sort', 'hot');
         
@@ -33,6 +33,10 @@ class MainController extends Controller
             $polls = $polls->sortByDesc(function ($poll, $key) {
                 return Vote::where('poll_id', $poll->id)->count();
             });
+        }
+
+        if($number){
+            $polls = $polls->take($number);
         }
 
         $data = array();
@@ -52,9 +56,9 @@ class MainController extends Controller
 
     public function closed(Request $request)
     {
-        $number = $request->input('number', 100000000);
+        $number = $request->input('number', false);
 
-        $polls = Poll::where('isListed', 'True')->where('isClosed', 'True')->take($number)->get();
+        $polls = Poll::where('isListed', 'True')->where('isClosed', 'True')->get();
 
         $sorting = $request->input('sort', 'hot');
         
@@ -66,6 +70,10 @@ class MainController extends Controller
             $polls = $polls->sortByDesc(function ($poll, $key) {
                 return Vote::where('poll_id', $poll->id)->count();
             });
+        }
+
+        if($number){
+            $polls = $polls->take($number);
         }
 
         $data = array();
