@@ -24,5 +24,3 @@ Route::get('/ongoing', 'MainController@ongoing');
 Route::get('/closed', 'MainController@closed');
 
 Route::post('/poll/create', 'MainController@createPoll');
-
-Route::get('/test/{number}/{message}', 'PollController@sendMessage');
