@@ -107,7 +107,7 @@ class MainController extends Controller
             $error = 'გთხოვთ მიუთითოთ გამოკითხვის დამთავრების თარიღი.';
         }
 
-        if ($request->exists('questions') && count($request->questions) > 5) {
+        if ($request->exists('questions') && request('questions') != null && count($request->questions) > 5) {
             $error = 'გთხოვთ დასვათ მაქსიმუმ 5 დამატებითი კითხვა.';
         }
 
