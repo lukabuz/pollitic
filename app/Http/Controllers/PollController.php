@@ -32,7 +32,7 @@ class PollController extends Controller
     }
 
     public function vote(Request $request, $id){
-        Log::info('Vote Request on Vote with ID ' . $id . ':\n' . serialize($request->all()));
+        Log::info('Vote Request on Vote with ID ' . $id . ':\n' . serialize($request->except('image')));
         $poll = Poll::findOrFail($id);
 
         if ($poll->password !== null) {
