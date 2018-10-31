@@ -21,7 +21,7 @@ class PollController extends Controller
 
         $poll->candidates;
         $poll->questions;
-        $poll->totalVotes();
+        $poll->totalVotes = $poll->totalVotes();
 
         return response()->json([
             'status' => 'success',
