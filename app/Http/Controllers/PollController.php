@@ -32,7 +32,6 @@ class PollController extends Controller
     }
 
     public function vote(Request $request, $id){
-        Log::info('Vote Request on Vote with ID ' . $id . ':\n' . serialize($request->all()));
         $poll = Poll::findOrFail($id);
 
         if ($poll->password !== null) {
@@ -70,6 +69,16 @@ class PollController extends Controller
                     return $this->returnError('ეს ნომერი ერთხელ უკვე გამოყენებულია!');
                 };
             }
+        } else {
+            $userAgent = $request->header('User-Agent');
+            $ip = explode(",", $request->header('x-forwarded-for'));
+            $uniqueID = md5($userAgent . $ip[0]);
+            //check if the number has been used before(compare hash to database hashes)
+            foreach (Vote::where('status', 'verified')->where('poll_id', $poll->id)->get() as $vote) {
+                if ($number == $uniqueID) {
+                    return $this->returnError('თქვენგან ხმა უკვე დაფიქსირებულია!');
+                };
+            }
         }
 
         $vote = new Vote;
@@ -84,8 +93,7 @@ class PollController extends Controller
 
         //number and pin hashing
         if ($poll->requirePhoneAuth == 'False') {
-            $vote->number = '';
-            $vote->pin = '';
+            $vote->number = $uniqueID;
             $vote->status = 'verified';
         } else {
             $vote->number = Hash::make($number);

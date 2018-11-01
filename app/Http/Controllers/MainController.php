@@ -93,7 +93,6 @@ class MainController extends Controller
 
     public function createPoll(Request $request)
     {
-        Log::info('Poll Creation Request:\n' . serialize($request->except('image')));
         //check if all required fields are given
         if (!$request->exists('name') || $request->input('name') == '') {
             $error = 'გთხოვთ შეიყვანოთ გამოკითხვის სათაური';
