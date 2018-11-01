@@ -94,15 +94,6 @@ class MainController extends Controller
     public function createPoll(Request $request)
     {
         //check if all required fields are given
-        if (!$request->exists('name') || $request->input('name') == '') {
-            $error = 'გთხოვთ შეიყვანოთ გამოკითხვის სათაური';
-            $errorVariable = 'name';
-        }
-        if (!$request->exists('description') || $request->input('description') == '') {
-            $error = 'გთხოვთ შეიყვანოთ გამოკითხვის აღწერა';
-            $errorVariable = 'description';
-        }
-        // if(!$request->exists('charts') || $request->input('charts') == '') { $error = 'გთხოვთ მიუთითოთ რეზულტატების გამოსახვის მეთოდი'; }
         if (!$request->exists('requirePhoneAuth') || $request->input('requirePhoneAuth') == '') {
             $error = 'გთხოვთ მიუთითოთ გსურთ თუ არა ხმის მიცემისას მობილური ვერიფიკაციის გამოყენება';
             $errorVariable = 'requirePhoneAuth';
@@ -110,10 +101,6 @@ class MainController extends Controller
         if (!$request->exists('isListed') || $request->input('isListed') == '') {
             $error = 'გთხოვთ მიუთითოთ გსურთ თუ არა გამოკითხვის გასაჯაროება(საიტზე ნებისმიერი შემომსვლელისათვის მისი გამოჩენა)';
             $errorVariable = 'isListed';
-        }
-        if (!$request->exists('candidates') || $request->input('candidates') == '') {
-            $error = 'გთხოვთ მიუთითოთ მინიმუმ 1 არჩევანი';
-            $errorVariable = 'candidates';
         }
         if (!$request->exists('closingDate') || $request->input('closingDate') == '') {
             $error = 'გთხოვთ მიუთითოთ გამოკითხვის დამთავრების თარიღი.';
@@ -142,6 +129,21 @@ class MainController extends Controller
                 $fileNameToStore = 'https://s3.' . env('AWS_DEFAULT_REGION') . '.amazonaws.com/laravel-pollitic/photos/' . $fileNameToStore;
             }
             
+        }
+
+        if (!$request->exists('candidates') || $request->input('candidates') == '') {
+            $error = 'გთხოვთ მიუთითოთ მინიმუმ 1 არჩევანი';
+            $errorVariable = 'candidates';
+        }
+
+        if (!$request->exists('description') || $request->input('description') == '') {
+            $error = 'გთხოვთ შეიყვანოთ გამოკითხვის აღწერა';
+            $errorVariable = 'description';
+        }
+
+        if (!$request->exists('name') || $request->input('name') == '') {
+            $error = 'გთხოვთ შეიყვანოთ გამოკითხვის სათაური';
+            $errorVariable = 'name';
         }
 
         if (isset($error)) {
