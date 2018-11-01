@@ -69,7 +69,16 @@ The response to this will __always__ have a 'status' property. The status will e
 
 ***error***
 
-- If there is an error, there will always be an error attribute that contains the error message. These error messages can be displayed straight to the user.
+- If there is an error, there will always be an error attribute that contains the error message. These error messages can be displayed straight to the user. There will also __sometimes__ be a field attribute, which will give the field that the error occured because of. This will only happen when the error is related to a field, and not some other part of the app.
+
+Example Error:
+
+    {
+        "status": "error",
+        "error": "გთხოვთ შეიყვანოთ გამოკითხვის სათაური",
+        "field": "name"
+    }
+
 
 ***success***
 
@@ -172,6 +181,18 @@ The response to this will either return a 404 because the poll was not found, or
 >  
 >  - 'მესიჯის გაგზავნისას დაფიქსირდა შეცდომა.'
 >  - 'შეყვანილი პაროლი არასწორია!' **If and only if the poll has a password**
+>
+> There may also be a 'field' attribute that will specify exactly which field the error occured because of, if this is the case.
+
+
+
+Error Example:
+
+    {
+        "status": "error",
+        "error": "გთხოვთ აირჩიოთ კანდიდატი!",
+        "field": "candidateId"
+    }
 
 ***success***
 

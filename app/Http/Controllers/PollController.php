@@ -36,18 +36,16 @@ class PollController extends Controller
 
         if ($poll->password !== null) {
             if (!Hash::check($request->input('password'), $poll->password)) {
-                return $this->returnError('შეყვანილი პაროლი არასწორია!');
+                return $this->returnError('შეყვანილი პაროლი არასწორია!', 'password');
             }
         }
-        
-        $number = $request->input('number');
     
         // if(!$this->verifyCaptcha($request)){
         //     return $this->returnError('გთხოვთ დაამტკიცოთ, რომ არ ხართ რობოტი');
         // }
 
         if (!$request->exists('candidateId') || $request->input('candidateId') == '') {
-            return $this->returnError('გთხოვთ აირჩიოთ კანდიდატი!');
+            return $this->returnError('გთხოვთ აირჩიოთ კანდიდატი!', 'candidateId');
         }
 
         $candidateId = $request->input('candidateId');
@@ -57,10 +55,11 @@ class PollController extends Controller
         }
 
         if ($poll->requirePhoneAuth == 'True') {
+            $number = $request->input('number');
             //check if phone # is valid
             $toMatch = '#^[+][1-9]{1}[0-9]{3,14}#';
             if (!preg_match($toMatch, $number)) {
-                return $this->returnError('გთხოვთ შეიყვანოთ სწორი ნომერი!');
+                return $this->returnError('გთხოვთ შეიყვანოთ სწორი ნომერი!', 'number');
             }
             
             //check if the number has been used before(compare hash to database hashes)
@@ -75,7 +74,7 @@ class PollController extends Controller
             $uniqueID = md5($userAgent . $ip[0]);
             //check if the number has been used before(compare hash to database hashes)
             foreach (Vote::where('status', 'verified')->where('poll_id', $poll->id)->get() as $vote) {
-                if ($number == $uniqueID) {
+                if ($vote->number == $uniqueID) {
                     return $this->returnError('თქვენგან ხმა უკვე დაფიქსირებულია!');
                 };
             }
@@ -156,14 +155,24 @@ class PollController extends Controller
             ]);
         }
 
-        return $this->returnError('შეყვანილი ვერიფიკაციის კოდი არასწორია!'); 
+        return $this->returnError('შეყვანილი ვერიფიკაციის კოდი არასწორია!', 'pin'); 
     }
 
-    public function returnError($message){
-        return response()->json([
-            'status' => 'error',
-            'error' => $message
-        ]);
+    public function returnError($message, $field = false){
+        if(!$field){
+            $json = [
+                'status' => 'error',
+                'error' => $message
+            ];
+        } else {
+            $json = [
+                'status' => 'error',
+                'error' => $message,
+                'field' => $field
+            ];
+        }        
+        
+        return response()->json($json);
     }
 
     public function sendMessage($number, $message){

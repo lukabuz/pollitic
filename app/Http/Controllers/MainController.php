@@ -96,45 +96,56 @@ class MainController extends Controller
         //check if all required fields are given
         if (!$request->exists('name') || $request->input('name') == '') {
             $error = 'გთხოვთ შეიყვანოთ გამოკითხვის სათაური';
+            $errorVariable = 'name';
         }
         if (!$request->exists('description') || $request->input('description') == '') {
             $error = 'გთხოვთ შეიყვანოთ გამოკითხვის აღწერა';
+            $errorVariable = 'description';
         }
         // if(!$request->exists('charts') || $request->input('charts') == '') { $error = 'გთხოვთ მიუთითოთ რეზულტატების გამოსახვის მეთოდი'; }
         if (!$request->exists('requirePhoneAuth') || $request->input('requirePhoneAuth') == '') {
             $error = 'გთხოვთ მიუთითოთ გსურთ თუ არა ხმის მიცემისას მობილური ვერიფიკაციის გამოყენება';
+            $errorVariable = 'requirePhoneAuth';
         }
         if (!$request->exists('isListed') || $request->input('isListed') == '') {
             $error = 'გთხოვთ მიუთითოთ გსურთ თუ არა გამოკითხვის გასაჯაროება(საიტზე ნებისმიერი შემომსვლელისათვის მისი გამოჩენა)';
+            $errorVariable = 'isListed';
         }
         if (!$request->exists('candidates') || $request->input('candidates') == '') {
             $error = 'გთხოვთ მიუთითოთ მინიმუმ 1 არჩევანი';
+            $errorVariable = 'candidates';
         }
         if (!$request->exists('closingDate') || $request->input('closingDate') == '') {
             $error = 'გთხოვთ მიუთითოთ გამოკითხვის დამთავრების თარიღი.';
+            $errorVariable = 'closingDate';
         }
 
         if ($request->exists('questions') && request('questions') != null && count($request->questions) > 5) {
             $error = 'გთხოვთ დასვათ მაქსიმუმ 5 დამატებითი კითხვა.';
+            $errorVariable = 'questions';
         }
 
         try {
             $closingDate = Carbon::createFromTimestamp($request->input('closingDate'))->toDateTimeString();
         } catch (\Exception $er) {
             $error = 'გთხოვთ შეიყვანოთ სწორი თარიღის ფორამატი';
+            $errorVariable = 'closingDate';
         }
 
         if ($request->hasFile('image')) {
             if ($request->File('image')->getClientSize() > 4000000) {
                 $error = 'სურათის ზომა არ უნდა აღემატებოდეს 4 მეგაბაიტს.';
+                $errorVariable = 'image';
+            } else {
+                $fileNameToStore = 'PollImage_'. str_random(5) . '_' . time() . '.' . $request->file('image')->getClientOriginalExtension();
+                $request->file('image')->storeAs('photos', $fileNameToStore, 's3', 'public');
+                $fileNameToStore = 'https://s3.' . env('AWS_DEFAULT_REGION') . '.amazonaws.com/laravel-pollitic/photos/' . $fileNameToStore;
             }
-            $fileNameToStore = 'PollImage_'. str_random(5) . '_' . time() . '.' . $request->file('image')->getClientOriginalExtension();
-            $request->file('image')->storeAs('photos', $fileNameToStore, 's3', 'public');
-            $fileNameToStore = 'https://s3.' . env('AWS_DEFAULT_REGION') . '.amazonaws.com/laravel-pollitic/photos/' . $fileNameToStore;
+            
         }
 
         if (isset($error)) {
-            return $this->returnError($error);
+            return $this->returnError($error, $errorVariable);
         }
         
         $poll = new Poll;
@@ -192,11 +203,21 @@ class MainController extends Controller
         ]);
     }
 
-    public function returnError($message)
+    public function returnError($message, $field = false)
     {
-        return response()->json([
-            'status' => 'error',
-            'error' => $message
-        ]);
+        if(!$field){
+            $json = [
+                'status' => 'error',
+                'error' => $message
+            ];
+        } else {
+            $json = [
+                'status' => 'error',
+                'error' => $message,
+                'field' => $field
+            ];
+        }        
+        
+        return response()->json($json);
     }
 }
