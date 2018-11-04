@@ -107,11 +107,6 @@ class PollController extends Controller
             }
         }
 
-        $res = $this->sendMessage($number, 'გამარჯობა! თქვენი Pollitic-ის ვერიფიკაციის კოდი არის: ' . $pin);
-        if (!$res) {
-            return $this->returnError('მესიჯის გაგზავნისას დაფიქსირდა შეცდომა.');
-        }
-
         $vote->poll_id = $poll->id;
 
         $vote->save();
