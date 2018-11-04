@@ -122,7 +122,7 @@ class PollController extends Controller
             }
         }
 
-        if($poll->requirePhoneAuth){
+        if($poll->requirePhoneAuth == 'True'){
             return response()->json([
                 'status' => 'success',
                 'data' => [
