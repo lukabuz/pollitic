@@ -97,6 +97,7 @@ class PollController extends Controller
         if ($poll->requirePhoneAuth == 'False') {
             $vote->number = $uniqueID;
             $vote->status = 'verified';
+            $vote->pin = '';
         } else {
             $vote->number = Hash::make($number);
             $vote->pin = Hash::make($pin);
