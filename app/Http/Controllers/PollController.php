@@ -37,6 +37,10 @@ class PollController extends Controller
     public function vote(Request $request, $id){
         $poll = Poll::findOrFail($id);
 
+        if($poll->isClosed == 'True'){
+            return $this->returnError('გამოკითხვა დასრულებულია!');
+        }
+
         if ($poll->password !== null) {
             if (!Hash::check($request->input('password'), $poll->password)) {
                 return $this->returnError('შეყვანილი პაროლი არასწორია!', 'password');
