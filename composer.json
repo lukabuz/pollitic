@@ -6,15 +6,12 @@
     "type": "project",
     "require": {
         "php": "^7.1.3",
-        "aloha/twilio": "^4.0",
         "doctrine/dbal": "^2.8",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^6.3",
         "laravel/framework": "5.7.*",
         "laravel/tinker": "^1.0",
-        "league/flysystem-aws-s3-v3": "^1.0",
-        "spatie/laravel-cors": "^1.3",
-        "twilio/sdk": "^5.24"
+        "league/flysystem-aws-s3-v3": "^1.0"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

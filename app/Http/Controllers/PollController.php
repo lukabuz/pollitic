@@ -21,6 +21,9 @@ class PollController extends Controller
 
         $poll->candidates;
         $poll->questions;
+        foreach($poll->candidates as $candidate){
+            $candidate->voteCount = $candidate->voteCount();
+        }
         $poll->totalVotes = $poll->totalVotes();
 
         return response()->json([
