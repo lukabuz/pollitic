@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::get('/test/{data}/{perpage}/{page}/view', 'MainController@paginate');
+
 Route::get('/poll/{id}/view', 'PollController@index');
 
 Route::post('/poll/{id}/vote', 'PollController@vote');

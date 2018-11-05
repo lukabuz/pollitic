@@ -46,10 +46,14 @@ class MainController extends Controller
             array_push($data, $poll);
         }
 
+        $paginatedData = $this->paginate($data, $request->input('perPage', 10), $request->input('page', 1));
+
         return response()->json([
             'status' => 'success',
             'data' => [
-                'polls' => $data,
+                'polls' => $paginatedData['data'],
+                'page' => $paginatedData['page'],
+                'totalPages' => $paginatedData['totalPages']
             ]
         ]);
     }
@@ -83,10 +87,14 @@ class MainController extends Controller
             array_push($data, $poll);
         }
 
+        $paginatedData = $this->paginate($data, $request->input('perPage', 10), $request->input('page', 1));
+
         return response()->json([
             'status' => 'success',
             'data' => [
-                'polls' => $data,
+                'polls' => $paginatedData['data'],
+                'page' => $paginatedData['page'],
+                'totalPages' => $paginatedData['totalPages']
             ]
         ]);
     }
@@ -221,5 +229,20 @@ class MainController extends Controller
         }        
         
         return response()->json($json);
+    }
+
+    public function paginate($data, $perPage, $page){
+        $length = count($data);
+        $totalPages = ceil( $length/ $perPage );
+        
+        $page = max($page, 1);
+        $page = min($page, $totalPages);
+        
+        $offset = ($page - 1) * $perPage;
+        if( $offset < 0 ) $offset = 0;
+        
+        $paginatedData = array_slice( $data, $offset, $perPage );
+        
+        return array('data' => $paginatedData, 'page' => $page, 'totalPages' => $totalPages);
     }
 }

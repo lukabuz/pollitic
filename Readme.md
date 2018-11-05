@@ -15,6 +15,8 @@ Required GET Variables
 |--|--|--|
 | sort | no | A string that is either 'new' or 'hot'. new returns polls sorted from newest to oldest, 'hot' returns polls sorted by their votecount |
 | number | no | An integer that specifys how many posts the requests want to retrieve
+| page | no | An integer that specifys which page of the data to be retrieved. defaults to 1
+| perPage | no | An integer that specifys how many polls should be shown per page for pagination. defaults to 10
 
 Example response:
 
@@ -43,6 +45,9 @@ Example response:
                     "totalVotes" : 0,
                 },
             ]
+            "page" : 1,
+            "totalPages": 1,
+            "perPage": 10
         }
     }
 
