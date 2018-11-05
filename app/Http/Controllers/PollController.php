@@ -47,9 +47,9 @@ class PollController extends Controller
             }
         }
     
-        // if(!$this->verifyCaptcha($request)){
-        //     return $this->returnError('გთხოვთ დაამტკიცოთ, რომ არ ხართ რობოტი');
-        // }
+        if(!$this->verifyCaptcha($request)){
+            return $this->returnError('გთხოვთ დაამტკიცოთ, რომ არ ხართ რობოტი', 'recaptcha');
+        }
 
         if (!$request->exists('candidateId') || $request->input('candidateId') == '') {
             return $this->returnError('გთხოვთ აირჩიოთ კანდიდატი!', 'candidateId');
@@ -186,10 +186,7 @@ class PollController extends Controller
     public function verifyCaptcha($request){
         $client = new HTTPClient();
 
-        $ip = $request->header('x-forwarded-for');
-
-    	$ip = explode(",",$ip);
-
+    	$ip = explode(",", $request->header('x-forwarded-for'));
         $ip = $ip[0];
     
         $response = $client->post(
@@ -197,7 +194,7 @@ class PollController extends Controller
             ['form_params'=>
                 [
                     'secret'=> env('GOOGLE_RECAPTCHA_SECRET'),
-                    'response'=> $request->input('value'),
+                    'response'=> $request->input('recaptcha'),
                     'remoteip'=> $ip
                 ]
             ]

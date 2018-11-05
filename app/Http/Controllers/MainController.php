@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Client as HTTPClient;
 use Carbon\Carbon;
 use App\Poll;
 use App\PollQuestionAnswer;
@@ -102,6 +103,11 @@ class MainController extends Controller
     public function createPoll(Request $request)
     {
         //check if all required fields are given
+        if(!$this->verifyCaptcha($request)){
+            $error = 'გთხოვთ დაამტკიცოთ, რომ არ ხართ რობოტი';
+            $errorVariable = 'recaptcha';
+        }
+
         if (!$request->exists('requirePhoneAuth') || $request->input('requirePhoneAuth') == '') {
             $error = 'გთხოვთ მიუთითოთ გსურთ თუ არა ხმის მიცემისას მობილური ვერიფიკაციის გამოყენება';
             $errorVariable = 'requirePhoneAuth';
@@ -244,5 +250,27 @@ class MainController extends Controller
         $paginatedData = array_slice( $data, $offset, $perPage );
         
         return array('data' => $paginatedData, 'page' => $page, 'totalPages' => $totalPages);
+    }
+
+    public function verifyCaptcha($request){
+        $client = new HTTPClient();
+
+    	$ip = explode(",", $request->header('x-forwarded-for'));
+        $ip = $ip[0];
+    
+        $response = $client->post(
+            'https://www.google.com/recaptcha/api/siteverify',
+            ['form_params'=>
+                [
+                    'secret'=> env('GOOGLE_RECAPTCHA_SECRET'),
+                    'response'=> $request->input('recaptcha'),
+                    'remoteip'=> $ip
+                ]
+            ]
+        );
+
+        $body = json_decode((string)$response->getBody());
+        
+        return $body->success;
     }
 }

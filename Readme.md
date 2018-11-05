@@ -69,6 +69,7 @@ Creates a poll based on the request.
 | questions | no | an array of non mandatory questions that the user wants voters to answer. maximum number of questions is 5 | ['question 1', 'question2'] |
 | closingDate | yes | a unix timestamp of when the poll should be closed | '1540935877' |
 | image | no | an image file that is 4MB max. |  |
+| recaptcha | yes | a token aquired from the google recaptcha on the site. |  |
 
 The response to this will __always__ have a 'status' property. The status will either be 'success' or 'error'
 
@@ -152,6 +153,7 @@ The {id} is the unique ID of the poll currently being voted on.
 | gender | no| Any string, the backend just treats it as a string and puts it in the database. The backend chose to treat this as just a string instead of a binary value because it is the frontend's job to conform to traditional gender roles. |
 | age | no| Any positive integer.  |
 | questions | no| An associative array __See Example Below__ |
+| recaptcha | yes | a token aquired from the google recaptcha on the site. |  |
 
 
 The 'ID' Attribute in this array is the ID of the question. This can be retrieved when looking at a specific poll, see example in '/api/poll/{id}/. It is optional entirely to send this data.
