@@ -46,7 +46,7 @@ class MainController extends Controller
             array_push($data, $poll);
         }
 
-        $paginatedData = $this->paginate($data, $request->input('perPage', 10), $request->input('page', 1));
+        $paginatedData = $this->paginate($data, (int)$request->input('perPage', 10), (int)$request->input('page', 1));
 
         return response()->json([
             'status' => 'success',
@@ -87,7 +87,7 @@ class MainController extends Controller
             array_push($data, $poll);
         }
 
-        $paginatedData = $this->paginate($data, $request->input('perPage', 10), $request->input('page', 1));
+        $paginatedData = $this->paginate($data, (int)$request->input('perPage', 10), (int)$request->input('page', 1));
 
         return response()->json([
             'status' => 'success',
