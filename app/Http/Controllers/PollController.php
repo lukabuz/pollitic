@@ -64,7 +64,7 @@ class PollController extends Controller
         if ($poll->requirePhoneAuth == 'True') {
             $number = $request->input('number');
             //check if phone # is valid
-            $toMatch = '#^[+][1-9]{1}[0-9]{3,14}#';
+            $toMatch = '#^[0-9]{3,14}#';
             if (!preg_match($toMatch, $number)) {
                 return $this->returnError('გთხოვთ შეიყვანოთ სწორი ნომერი!', 'number');
             }
