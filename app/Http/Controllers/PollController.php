@@ -187,7 +187,7 @@ class PollController extends Controller
         //build params array
         $params = array(
             'apikey' => env('SMS_TOKEN'),
-            'smsno' => 1,
+            'smsno' => 2,
             'destination' => $number,
             'content' => $message
         );
@@ -214,11 +214,17 @@ class PollController extends Controller
         curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyAuth);
 
         $result = curl_exec($ch);
+
+        $info = curl_getinfo($ch);
+
         curl_close($ch);
 
-        if($result){ Log::info('SMS GET result: ' . $result); }
-
-        return $result;
+        if($info["http_code"] == '200'){ 
+            Log::info('SMS GET result: ' . $result); 
+            return true;
+        }
+        
+        return false;
     }
 
     public function verifyCaptcha($request){
