@@ -107,9 +107,12 @@ class PollController extends Controller
             $vote->pin = Hash::make($pin);
             $vote->status = 'unverified';
             $res = $this->sendMessage($number, 'გამარჯობა! თქვენი Pollitic-ის ვერიფიკაციის კოდი არის: ' . $pin);
+            Log::info('Sending SMS to ' . $number);
             if (!$res) {
+                Log::info('Sending SMS to ' . $number . ' failed');
                 return $this->returnError('მესიჯის გაგზავნისას დაფიქსირდა შეცდომა.');
             }
+            Log::info('Sending SMS to ' . $number . ' success');
         }
 
         $vote->poll_id = $poll->id;
@@ -194,6 +197,8 @@ class PollController extends Controller
         //is a message containing spaces, so this is a safer way of doing it.
         $query = http_build_query($params);
         
+        Log::info($url . '?' . $query);        
+        
         //set up fixie to communicate with sender.ge through a static IP
         $fixieUrl = getenv("FIXIE_URL");
         $parsedFixieUrl = parse_url($fixieUrl);
@@ -210,6 +215,8 @@ class PollController extends Controller
 
         $result = curl_exec($ch);
         curl_close($ch);
+
+        if($result){ Log::info('SMS GET result: ' . $result); }
 
         return $result;
     }
