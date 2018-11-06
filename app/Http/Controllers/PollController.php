@@ -179,8 +179,39 @@ class PollController extends Controller
     }
 
     public function sendMessage($number, $message){
-        $url = 'https://sender.ge/api/send.php?apikey=' . env('SMS_TOKEN') . '&smsno=1&destination=' . $number . '&content=' . $message;
-        $response = $this->proxyRequest($url);
+        $url = 'https://sender.ge/api/send.php';
+
+        //build params array
+        $params = array(
+            'apikey' => env('SMS_TOKEN'),
+            'smsno' => 1,
+            'destination' => $number,
+            'content' => $message
+        );
+
+        //Build query using params
+        //Most values can be just be put into the url string, but the 'content' param
+        //is a message containing spaces, so this is a safer way of doing it.
+        $query = http_build_query($params);
+        
+        //set up fixie to communicate with sender.ge through a static IP
+        $fixieUrl = getenv("FIXIE_URL");
+        $parsedFixieUrl = parse_url($fixieUrl);
+
+        $proxy = $parsedFixieUrl['host'].":".$parsedFixieUrl['port'];
+        $proxyAuth = $parsedFixieUrl['user'].":".$parsedFixieUrl['pass'];
+
+        //init curl and send request
+        $ch = curl_init($url . '?' . $query);
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_PROXY, $proxy);
+        curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyAuth);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        return $result;
     }
 
     public function verifyCaptcha($request){
@@ -206,20 +237,8 @@ class PollController extends Controller
     }
 
     public function proxyRequest($url) {
-        $fixieUrl = getenv("FIXIE_URL");
-        $parsedFixieUrl = parse_url($fixieUrl);
+        
 
-        $proxy = $parsedFixieUrl['host'].":".$parsedFixieUrl['port'];
-        $proxyAuth = $parsedFixieUrl['user'].":".$parsedFixieUrl['pass'];
-
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_HEADER, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_PROXY, $proxy);
-        curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyAuth);
-
-        $result = curl_exec($ch);
-
-        curl_close($ch);
+        die($result);
     }
 }
