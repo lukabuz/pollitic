@@ -219,7 +219,7 @@ class PollController extends Controller
 
         curl_close($ch);
 
-        if($info["http_code"] == '200'){ 
+        if($info["http_code"] == 200){ 
             Log::info('SMS GET result: ' . $result); 
             return true;
         }
