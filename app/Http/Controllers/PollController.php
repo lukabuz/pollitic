@@ -223,6 +223,8 @@ class PollController extends Controller
             Log::info('SMS GET result: ' . $result); 
             return true;
         }
+
+        Log::info('Failed SMS GET result: ' . $result);
         
         return false;
     }
