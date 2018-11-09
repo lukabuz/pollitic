@@ -31,7 +31,8 @@ class CrawlerMiddleware
                     'url' => $request->fullUrl(),
                     'title' => $poll->name,
                     'description' => $poll->description,
-                    'image' => $poll->image
+                    'image' => $poll->imageLink,
+                    'type' => 'article'
                 );
             } else {
                 $meta = array(
