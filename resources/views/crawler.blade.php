@@ -10,9 +10,5 @@
 		<title>Pollitic - {{ $meta['title'] }}</title>
 	</head>
 	<body>
-		<noscript>
-			<h3>აუცილებელია გქონდეთ ჩართული Javascript, რომ იხილოთ ეს საიტი.</h3>
-		</noscript>
-		<div id="root"></div>
-		</body>
+    </body>
 </html>
