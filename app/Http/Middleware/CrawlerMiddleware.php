@@ -25,7 +25,7 @@ class CrawlerMiddleware
         if(str_contains($request->header('User-Agent'), $crawlers)){
             $route = explode('/', $request->path());
 
-            if(count($route) == 3 && $route[0] == 'poll' && $route[2] == 'view'){
+            if(count($route) == 2 && $route[0] == 'poll'){
                 $poll = \App\Poll::findOrFail($route[1]);
                 $meta = array(
                     'url' => $request->fullUrl(),
