@@ -121,10 +121,10 @@ class MainController extends Controller
             $errorVariable = 'closingDate';
         }
 
-        if ($request->exists('questions') && request('questions') != null && count($request->questions) > 5) {
-            $error = 'გთხოვთ დასვათ მაქსიმუმ 5 დამატებითი კითხვა.';
-            $errorVariable = 'questions';
-        }
+        // if ($request->exists('questions') && request('questions') != null && count($request->questions) > 5) {
+        //     $error = 'გთხოვთ დასვათ მაქსიმუმ 5 დამატებითი კითხვა.';
+        //     $errorVariable = 'questions';
+        // }
 
         try {
             $closingDate = Carbon::createFromTimestamp($request->input('closingDate'))->toDateTimeString();
@@ -187,10 +187,6 @@ class MainController extends Controller
         } else {
             $poll->isListed = 'False';
         }
-        
-        if ($request->exists('password') && $request->input('password') !== '') {
-            $poll->password = Hash::make($request->input('password'));
-        }
 
         $poll->save();
 
@@ -201,14 +197,14 @@ class MainController extends Controller
             $newCandidate->save();
         }
 
-        if ($request->exists('questions')) {
-            foreach ($request->questions as $question) {
-                $newQuestion = new PollQuestion;
-                $newQuestion->question = $question;
-                $newQuestion->poll_id = $poll->id;
-                $newQuestion->save();
-            }
-        }
+        // if ($request->exists('questions')) {
+        //     foreach ($request->questions as $question) {
+        //         $newQuestion = new PollQuestion;
+        //         $newQuestion->question = $question;
+        //         $newQuestion->poll_id = $poll->id;
+        //         $newQuestion->save();
+        //     }
+        // }
 
         return response()->json([
             'status' => 'success',

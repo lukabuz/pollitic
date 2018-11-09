@@ -20,7 +20,7 @@ class PollController extends Controller
         $poll = Poll::findOrFail($id);
 
         $poll->candidates;
-        $poll->questions;
+        // $poll->questions;
         foreach($poll->candidates as $candidate){
             $candidate->voteCount = $candidate->voteCount();
         }
@@ -39,12 +39,6 @@ class PollController extends Controller
 
         if($poll->isClosed == 'True'){
             return $this->returnError('გამოკითხვა დასრულებულია!');
-        }
-
-        if ($poll->password !== null) {
-            if (!Hash::check($request->input('password'), $poll->password)) {
-                return $this->returnError('შეყვანილი პაროლი არასწორია!', 'password');
-            }
         }
     
         if(!$this->verifyCaptcha($request)){
@@ -119,15 +113,15 @@ class PollController extends Controller
 
         $vote->save();
 
-        if ($request->exists('questions')) {
-            foreach ($request->questions as $question) {
-                $answer = new PollQuestionAnswer;
-                $answer->vote_id = $vote['id'];
-                $answer->poll_question_id = $question['id'];
-                $answer->answer = $question['answer'];
-                $answer->save();
-            }
-        }
+        // if ($request->exists('questions')) {
+        //     foreach ($request->questions as $question) {
+        //         $answer = new PollQuestionAnswer;
+        //         $answer->vote_id = $vote['id'];
+        //         $answer->poll_question_id = $question['id'];
+        //         $answer->answer = $question['answer'];
+        //         $answer->save();
+        //     }
+        // }
 
         if($poll->requirePhoneAuth == 'True'){
             return response()->json([

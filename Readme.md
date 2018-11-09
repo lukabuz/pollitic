@@ -66,7 +66,6 @@ Creates a poll based on the request.
 | requirePhoneAuth | yes | string boolean value of if this poll requires phone authentication | 'True' |
 | isListed | yes | string boolean value of if this poll is unlisted or not | 'True' |
 | candidates | yes | an array of candidates | ['name1', 'name2'] |
-| questions | no | an array of non mandatory questions that the user wants voters to answer. maximum number of questions is 5 | ['question 1', 'question2'] |
 | closingDate | yes | a unix timestamp of when the poll should be closed | '1540935877' |
 | image | no | an image file that is 4MB max. |  |
 | recaptcha | yes | a token aquired from the google recaptcha on the site. |  |
@@ -124,15 +123,6 @@ Example response:
                         "voteCount":0
                     }
                 ]
-                "questions": [
-                    {
-                    "id": 1,
-                    "question": "test1",
-                    "poll_id": 21,
-                    "created_at": "2018-10-26 10:28:38",
-                    "updated_at": "2018-10-26 10:28:38"
-                    },
-                ]
             }
         }
     }
@@ -152,23 +142,7 @@ The {id} is the unique ID of the poll currently being voted on.
 | candidateId | yes| ID of the candidate the person voted for. The candidateId for each candidate is provided in the response of the '/api' route as the 'id' attribute. |
 | gender | no| Any string, the backend just treats it as a string and puts it in the database. The backend chose to treat this as just a string instead of a binary value because it is the frontend's job to conform to traditional gender roles. |
 | age | no| Any positive integer.  |
-| questions | no| An associative array __See Example Below__ |
 | recaptcha | yes | a token aquired from the google recaptcha on the site. |  |
-
-
-The 'ID' Attribute in this array is the ID of the question. This can be retrieved when looking at a specific poll, see example in '/api/poll/{id}/. It is optional entirely to send this data.
-
-Example 'questions' array: 
-    "questions": {
-        "2" : {
-            "id": "1",
-            "answer": "test"
-        },
-        "1" : {
-            "id": "2",
-            "answer": "test"
-        }
-    }
 
 The response to this will either return a 404 because the poll was not found, or it will __always__ have a 'status' property. The status will either be 'success' or 'error'
 
