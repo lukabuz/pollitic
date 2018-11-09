@@ -39,7 +39,8 @@ class CrawlerMiddleware
                     'url' => $request->fullUrl(),
                     'title' => 'დააფიქსირე შენი ხმა',
                     'description' => 'შექმენით სანდო გამოკითხვა წამებში',
-                    'image' => 'https://s3.eu-central-1.amazonaws.com/laravel-pollitic/photos/PollImage_SPjqW_1541721334.png'
+                    'image' => 'https://s3.eu-central-1.amazonaws.com/laravel-pollitic/photos/PollImage_SPjqW_1541721334.png',
+                    'type' => 'website'
                 );
             }
 
