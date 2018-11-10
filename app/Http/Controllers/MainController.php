@@ -134,8 +134,12 @@ class MainController extends Controller
         }
 
         if ($request->hasFile('image')) {
+            $extensions = ['jpg', 'jpeg', 'png'];
             if ($request->File('image')->getClientSize() > 4000000) {
                 $error = 'სურათის ზომა არ უნდა აღემატებოდეს 4 მეგაბაიტს.';
+                $errorVariable = 'image';
+            } else if (!in_array($request->File('image')->getClientOriginalExtension() , $extensions)) {
+                $error = 'სურათი უნდა იყოს ან jpg, jpeg, ან png ფორმატი.';
                 $errorVariable = 'image';
             } else {
                 $fileNameToStore = 'PollImage_'. str_random(5) . '_' . time() . '.' . $request->file('image')->getClientOriginalExtension();
@@ -153,11 +157,17 @@ class MainController extends Controller
         if (!$request->exists('description') || $request->input('description') == '') {
             $error = 'გთხოვთ შეიყვანოთ გამოკითხვის აღწერა';
             $errorVariable = 'description';
+        } else if (strlen($request->input('description')) > 500 || strlen($request->input('description')) < 10) {
+            $error = 'გამოკითხვის აღწერა უნდა იყოს მინიმუმ 10 და მაქსიმუმ 500 ასო';
+            $errorVariable = 'description';
         }
 
         if (!$request->exists('name') || $request->input('name') == '') {
             $error = 'გთხოვთ შეიყვანოთ გამოკითხვის სათაური';
             $errorVariable = 'name';
+        } else if (strlen($request->input('name')) > 200 || strlen($request->input('name')) < 5) {
+            $error = 'გამოკითხვის სათაური უნდა იყოს მინიმუმ 5 და მაქსიმუმ 200 ასო';
+            $errorVariable = 'description';
         }
 
         if (isset($error)) {
