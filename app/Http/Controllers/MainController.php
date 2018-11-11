@@ -154,7 +154,7 @@ class MainController extends Controller
             $errorVariable = 'candidates';
         } else {
             foreach($request->input('candidates') as $candidate){
-                if(strlen($candidate) > 30 || strlen($candidate) < 2){
+                if(mb_strlen($candidate) > 30 || mb_strlen($candidate) < 2){
                     $error = 'თითო პასუხი უნდა იყოს მინიმუმ 2 და მაქსიმუმ 30 ასო';
                     $errorVariable = 'candidates';
                 }
@@ -164,7 +164,7 @@ class MainController extends Controller
         if (!$request->exists('description') || $request->input('description') == '') {
             $error = 'გთხოვთ შეიყვანოთ გამოკითხვის აღწერა';
             $errorVariable = 'description';
-        } elseif (strlen($request->input('description')) > 350 || strlen($request->input('description')) < 10) {
+        } elseif (mb_strlen($request->input('description')) > 350 || mb_strlen($request->input('description')) < 10) {
             $error = 'გამოკითხვის აღწერა უნდა იყოს მინიმუმ 10 და მაქსიმუმ 350 ასო';
             $errorVariable = 'description';
         }
@@ -172,7 +172,7 @@ class MainController extends Controller
         if (!$request->exists('name') || $request->input('name') == '') {
             $error = 'გთხოვთ შეიყვანოთ გამოკითხვის სათაური';
             $errorVariable = 'name';
-        } elseif (strlen($request->input('name')) > 80 || strlen($request->input('name')) < 5) {
+        } elseif (mb_strlen($request->input('name')) > 80 || mb_strlen($request->input('name')) < 5) {
             $error = 'გამოკითხვის სათაური უნდა იყოს მინიმუმ 5 და მაქსიმუმ 80 ასო';
             $errorVariable = 'name';
         }
