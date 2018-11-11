@@ -161,7 +161,7 @@ class MainController extends Controller
             }
         }
 
-        if (!$request->exists('description') || $request->input('description') == '') {
+        if ($request->exists('description') && $request->input('description') == '') {
             $error = 'გთხოვთ შეიყვანოთ გამოკითხვის აღწერა';
             $errorVariable = 'description';
         } elseif (mb_strlen($request->input('description')) > 350 || mb_strlen($request->input('description')) < 10) {
