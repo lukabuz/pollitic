@@ -138,7 +138,7 @@ class MainController extends Controller
             if ($request->File('image')->getClientSize() > 4000000) {
                 $error = 'სურათის ზომა არ უნდა აღემატებოდეს 4 მეგაბაიტს.';
                 $errorVariable = 'image';
-            } else if (!in_array($request->File('image')->getClientOriginalExtension() , $extensions)) {
+            } elseif (!in_array($request->File('image')->getClientOriginalExtension() , $extensions)) {
                 $error = 'სურათი უნდა იყოს ან jpg, jpeg, ან png ფორმატი.';
                 $errorVariable = 'image';
             } else {
@@ -164,7 +164,7 @@ class MainController extends Controller
         if (!$request->exists('description') || $request->input('description') == '') {
             $error = 'გთხოვთ შეიყვანოთ გამოკითხვის აღწერა';
             $errorVariable = 'description';
-        } else if (strlen($request->input('description')) > 350 || strlen($request->input('description')) < 10) {
+        } elseif (strlen($request->input('description')) > 350 || strlen($request->input('description')) < 10) {
             $error = 'გამოკითხვის აღწერა უნდა იყოს მინიმუმ 10 და მაქსიმუმ 350 ასო';
             $errorVariable = 'description';
         }
@@ -172,7 +172,7 @@ class MainController extends Controller
         if (!$request->exists('name') || $request->input('name') == '') {
             $error = 'გთხოვთ შეიყვანოთ გამოკითხვის სათაური';
             $errorVariable = 'name';
-        } else if (strlen($request->input('name')) > 80 || strlen($request->input('name')) < 5) {
+        } elseif (strlen($request->input('name')) > 80 || strlen($request->input('name')) < 5) {
             $error = 'გამოკითხვის სათაური უნდა იყოს მინიმუმ 5 და მაქსიმუმ 80 ასო';
             $errorVariable = 'name';
         }
