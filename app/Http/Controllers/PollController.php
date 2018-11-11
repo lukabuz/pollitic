@@ -146,6 +146,7 @@ class PollController extends Controller
 
         if(Hash::check($request->input('pin'), $vote->pin)){
             $vote->status = 'verified';
+            $vote->pin = 'verified';
             $vote->save();
             return response()->json([
                 'status' => 'success',

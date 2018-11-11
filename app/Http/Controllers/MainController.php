@@ -149,25 +149,32 @@ class MainController extends Controller
             
         }
 
-        if (!$request->exists('candidates') || $request->input('candidates') == '') {
+        if (!$request->exists('candidates') || $request->input('candidates') == '' || !is_array($request->input('candidates'))) {
             $error = 'გთხოვთ მიუთითოთ მინიმუმ 1 არჩევანი';
             $errorVariable = 'candidates';
+        } else {
+            foreach($request->input('candidates') as $candidate){
+                if(strlen($candidate) > 30 || strlen($candidate) < 2){
+                    $error = 'თითო პასუხი უნდა იყოს მინიმუმ 2 და მაქსიმუმ 30 ასო';
+                    $errorVariable = 'candidates';
+                }
+            }
         }
 
         if (!$request->exists('description') || $request->input('description') == '') {
             $error = 'გთხოვთ შეიყვანოთ გამოკითხვის აღწერა';
             $errorVariable = 'description';
-        } else if (strlen($request->input('description')) > 500 || strlen($request->input('description')) < 10) {
-            $error = 'გამოკითხვის აღწერა უნდა იყოს მინიმუმ 10 და მაქსიმუმ 500 ასო';
+        } else if (strlen($request->input('description')) > 350 || strlen($request->input('description')) < 10) {
+            $error = 'გამოკითხვის აღწერა უნდა იყოს მინიმუმ 10 და მაქსიმუმ 350 ასო';
             $errorVariable = 'description';
         }
 
         if (!$request->exists('name') || $request->input('name') == '') {
             $error = 'გთხოვთ შეიყვანოთ გამოკითხვის სათაური';
             $errorVariable = 'name';
-        } else if (strlen($request->input('name')) > 200 || strlen($request->input('name')) < 5) {
-            $error = 'გამოკითხვის სათაური უნდა იყოს მინიმუმ 5 და მაქსიმუმ 200 ასო';
-            $errorVariable = 'description';
+        } else if (strlen($request->input('name')) > 80 || strlen($request->input('name')) < 5) {
+            $error = 'გამოკითხვის სათაური უნდა იყოს მინიმუმ 5 და მაქსიმუმ 80 ასო';
+            $errorVariable = 'name';
         }
 
         if (isset($error)) {
