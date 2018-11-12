@@ -238,9 +238,20 @@ class PollController extends Controller
         return $body->success;
     }
 
-    public function proxyRequest($url) {
-        
+    public function deletePoll(Request $request, $id){
+        $poll = Poll::findOrFail($id);
+        if($request->input('password') == env('DELETION_PASSKEY')){
+            Vote::where('poll_id', $poll->id)->delete();
+            Candidate::where('poll_id', $poll->id)->delete();
 
-        die($result);
+            $poll->delete();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'გამოკითხვა წარმატებით წაიშალა'
+            ]);
+        } else {
+            $this->returnError('პაროლი არასწორია', 'password');
+        }
     }
 }

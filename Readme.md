@@ -30,10 +30,8 @@ Example response:
                     "description": "test",
                     "imageLink": null,
                     "password": null,
-                    "charts": "",
                     "requirePhoneAuth": "True",
                     "isListed": "True",
-                    "cookieValue": "m1mgTNzOqVQO4xaRJyvZASzTr",
                     "created_at": "2018-10-23 10:42:59",
                     "updated_at": "2018-10-23 10:42:59"
                     "isClosed": "True",
@@ -42,8 +40,8 @@ Example response:
                         "timezone_type":3,
                         "timezone":"UTC"
                     },
-                    "totalVotes" : 0,
-                },
+                    "totalVotes" : 0
+                }
             ]
             "page" : 1,
             "totalPages": 1,
@@ -103,10 +101,8 @@ Example response:
                 "description":"test",
                 "imageLink":null,
                 "password":null,
-                "charts":"",
                 "requirePhoneAuth":"True",
                 "isListed":"True",
-                "cookieValue":"m1mgTNzOqVQO4xaRJyvZASzTr",
                 "created_at":"2018-10-23 10:42:59",
                 "updated_at":"2018-10-23 10:42:59",
                 "candidates":[
@@ -202,4 +198,20 @@ This route may return 3 things:
  - A 404 because a vote with the given ID was not found. This should never happen as you should __always__ be acquiring this link from a post request to '/api/vote/'
  - A JSON with a 'status' property of 'success'. This means that the vote has been verified.
  - An error saying 'შეყვანილი ვერიფიკაციის კოდი არასწორია!'
+
+
+## POST: '/api/poll/{id}/delete/'
+
+
+ This route is used to remove a poll.
+
+| Name | Required | Details |
+|--|--|--|
+| password | required | an administrator password |
+
+This route may return 3 things:
+
+ - A 404 because a poll with the given ID was not found.
+ - A JSON with a 'status' property of 'success'. This means that the poll has been deleted.
+ - An error saying 'პაროლი არასწორია!'
 

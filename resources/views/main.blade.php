@@ -2,7 +2,7 @@
 <html lang="ka">
 
 <head>
-	<!-- Global site tag (gtag.js) - Google Analytics -->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-129007516-1"></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
@@ -15,12 +15,12 @@
     <link rel="shortcut icon" href="{{ asset('/favicon.ico') }}" />
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
     <meta name="theme-color" content="#000000" />
-    <link rel="manifest" href="/manifest.json" />
+    <link rel="manifest" href="{{ asset('/manifest.json') }}" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
     <script src="https://www.google.com/recaptcha/api.js" async defer="defer"></script>
     <title>Pollitic</title>
-    <link href="{{ asset('/static/css/main.e207e4bc.chunk.css') }}" rel="stylesheet">
+    <link href="{{ asset('/static/css/main.bbe3d712.chunk.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -103,8 +103,8 @@
             a()
         }([])
     </script>
-    <script src="{{ asset('/static/js/1.68864e1a.chunk.js') }}"></script>
-    <script src="{{ asset('/static/js/main.dbb39e64.chunk.js') }}"></script>
+    <script src="{{ asset('/static/js/1.0146847c.chunk.js') }}"></script>
+    <script src="{{ asset('/static/js/main.1224ece6.chunk.js') }}"></script>
 </body>
 
 </html>

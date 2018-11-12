@@ -17,6 +17,8 @@ Route::get('/poll/{id}/view', 'PollController@index');
 
 Route::post('/poll/{id}/vote', 'PollController@vote');
 
+Route::post('/poll/{id}/delete', 'PollController@deletePoll');
+
 Route::post('/vote/{id}/verify', 'PollController@verify');
 
 Route::get('/ongoing', 'MainController@ongoing');
