@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
     <script src="https://www.google.com/recaptcha/api.js" async defer="defer"></script>
     <title>Pollitic</title>
-    <link href="{{ asset('/static/css/main.bbe3d712.chunk.css') }}" rel="stylesheet">
+    <link href="{{ asset('/static/css/main.40c5c115.chunk.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -103,8 +103,8 @@
             a()
         }([])
     </script>
-    <script src="{{ asset('/static/js/1.0146847c.chunk.js') }}"></script>
-    <script src="{{ asset('/static/js/main.1224ece6.chunk.js') }}"></script>
+    <script src="{{ asset('/static/js/1.d8109dd6.chunk.js') }}"></script>
+    <script src="{{ asset('/static/js/main.1dcf7da4.chunk.js') }}"></script>
 </body>
 
 </html>
