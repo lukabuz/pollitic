@@ -104,7 +104,7 @@
         }([])
     </script>
     <script src="{{ asset('/static/js/1.d8109dd6.chunk.js') }}"></script>
-    <script src="{{ asset('/static/js/main.1dcf7da4.chunk.js') }}"></script>
+    <script src="{{ asset('/static/js/main.010e727c.chunk.js') }}"></script>
 </body>
 
 </html>
