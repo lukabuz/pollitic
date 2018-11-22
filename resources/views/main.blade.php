@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
     <script src="https://www.google.com/recaptcha/api.js" async defer="defer"></script>
     <title>Pollitic</title>
-    <link href="{{ asset('/static/css/main.40c5c115.chunk.css') }}" rel="stylesheet">
+    <link href="{{ asset('/static/css/main.7a92bff2.chunk.css') }}" rel="stylesheet">
 </head>
 
 <body>
